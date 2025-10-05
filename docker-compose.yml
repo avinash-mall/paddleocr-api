@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  paddleocr-api:
+    image: paddleocr-api:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ocr_api.py:/app/ocr_api.py:ro
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
