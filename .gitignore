@@ -60,7 +60,7 @@ test_*.sh
 *.txt
 sample_*
 example_*
-
+paddlepaddle_gpu*.whl
 # Docker
 .dockerignore
 
