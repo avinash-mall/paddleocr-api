@@ -368,49 +368,55 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
         Extract markdown from PP-StructureV3 page result.
         Uses the same data source as _page_to_json for consistency.
         """
-        # Primary approach: Get rec_texts from page.res.overall_ocr_res (same as JSON endpoint)
+        # Primary approach: Use page.json() method (same as JSON endpoint)
         try:
-            res_block = getattr(page, "res", None)
-            print(f"DEBUG: res_block = {res_block}")
-            if res_block and hasattr(res_block, "overall_ocr_res"):
-                print(f"DEBUG: Found overall_ocr_res")
-                ocr_res = res_block.overall_ocr_res
-                if hasattr(ocr_res, "rec_texts"):
-                    print(f"DEBUG: Found rec_texts, count = {len(ocr_res.rec_texts)}")
-                    rec_texts = ocr_res.rec_texts
-                    if isinstance(rec_texts, list) and rec_texts:
-                        # Filter out empty strings and format the content
-                        filtered_texts = [str(t).strip() for t in rec_texts if str(t).strip()]
-                        if filtered_texts:
-                            # Create better formatted markdown from OCR text
-                            formatted_markdown = []
-                            current_section = []
-                            
-                            for text in filtered_texts:
-                                # Detect document structure and format accordingly
-                                if text.upper() in ['TENANCYCONTRACT', 'CONTRACT', 'AGREEMENT']:
-                                    if current_section:
-                                        formatted_markdown.append('\n'.join(current_section))
-                                    formatted_markdown.append(f"# {text}")
-                                    current_section = []
-                                elif ':' in text and len(text) < 50:  # Likely a label
-                                    if current_section:
-                                        formatted_markdown.append('\n'.join(current_section))
-                                    formatted_markdown.append(f"**{text}**")
-                                    current_section = []
-                                elif text.startswith(('Date:', 'From:', 'To:', 'Rent:', 'Landlord:', 'Tenant:')):
-                                    if current_section:
-                                        formatted_markdown.append('\n'.join(current_section))
-                                    formatted_markdown.append(f"**{text}**")
-                                    current_section = []
-                                else:
-                                    current_section.append(text)
-                            
-                            # Add any remaining content
-                            if current_section:
-                                formatted_markdown.append('\n'.join(current_section))
-                            
-                            return ['\n\n'.join(formatted_markdown)] if formatted_markdown else filtered_texts
+            j = getattr(page, "json", None)
+            if callable(j):
+                try:
+                    j = j()
+                except Exception:
+                    j = None
+            
+            if isinstance(j, dict):
+                # Look for rec_texts in the JSON structure
+                res_data = j.get("res")
+                if res_data and isinstance(res_data, dict):
+                    ocr_res = res_data.get("overall_ocr_res")
+                    if ocr_res and isinstance(ocr_res, dict):
+                        rec_texts = ocr_res.get("rec_texts")
+                        if isinstance(rec_texts, list) and rec_texts:
+                            # Filter out empty strings and format the content
+                            filtered_texts = [str(t).strip() for t in rec_texts if str(t).strip()]
+                            if filtered_texts:
+                                # Create better formatted markdown from OCR text
+                                formatted_markdown = []
+                                current_section = []
+                                
+                                for text in filtered_texts:
+                                    # Detect document structure and format accordingly
+                                    if text.upper() in ['TENANCYCONTRACT', 'CONTRACT', 'AGREEMENT']:
+                                        if current_section:
+                                            formatted_markdown.append('\n'.join(current_section))
+                                        formatted_markdown.append(f"# {text}")
+                                        current_section = []
+                                    elif ':' in text and len(text) < 50:  # Likely a label
+                                        if current_section:
+                                            formatted_markdown.append('\n'.join(current_section))
+                                        formatted_markdown.append(f"**{text}**")
+                                        current_section = []
+                                    elif text.startswith(('Date:', 'From:', 'To:', 'Rent:', 'Landlord:', 'Tenant:')):
+                                        if current_section:
+                                            formatted_markdown.append('\n'.join(current_section))
+                                        formatted_markdown.append(f"**{text}**")
+                                        current_section = []
+                                    else:
+                                        current_section.append(text)
+                                
+                                # Add any remaining content
+                                if current_section:
+                                    formatted_markdown.append('\n'.join(current_section))
+                                
+                                return ['\n\n'.join(formatted_markdown)] if formatted_markdown else filtered_texts
         except Exception:
             pass
         
