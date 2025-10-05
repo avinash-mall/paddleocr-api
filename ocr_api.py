@@ -1,4 +1,4 @@
-"""
+﻿"""
 PaddleOCR API - Multi-Language Document Intelligence
 
 A production-ready FastAPI service providing GPU-accelerated OCR and document 
@@ -365,54 +365,78 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
 
     def _page_to_markdown_texts(page: Any) -> List[str]:
         """
-        Try multiple shapes:
-          - page.markdown -> dict -> 'markdown_texts' or 'md_texts'
-          - page['markdown'] (dict/list) or page['res_md']
-          - fallback: try to reconstruct from 'res' blocks
+        Extract markdown from PP-StructureV3 page result.
+        Uses the same data source as _page_to_json for consistency.
         """
-        # 1) attribute access
+        # Primary approach: Get rec_texts from page.res.overall_ocr_res (same as JSON endpoint)
+        try:
+            res_block = getattr(page, "res", None)
+            print(f"DEBUG: res_block = {res_block}")
+            if res_block and hasattr(res_block, "overall_ocr_res"):
+                print(f"DEBUG: Found overall_ocr_res")
+                ocr_res = res_block.overall_ocr_res
+                if hasattr(ocr_res, "rec_texts"):
+                    print(f"DEBUG: Found rec_texts, count = {len(ocr_res.rec_texts)}")
+                    rec_texts = ocr_res.rec_texts
+                    if isinstance(rec_texts, list) and rec_texts:
+                        # Filter out empty strings and format the content
+                        filtered_texts = [str(t).strip() for t in rec_texts if str(t).strip()]
+                        if filtered_texts:
+                            # Create better formatted markdown from OCR text
+                            formatted_markdown = []
+                            current_section = []
+                            
+                            for text in filtered_texts:
+                                # Detect document structure and format accordingly
+                                if text.upper() in ['TENANCYCONTRACT', 'CONTRACT', 'AGREEMENT']:
+                                    if current_section:
+                                        formatted_markdown.append('\n'.join(current_section))
+                                    formatted_markdown.append(f"# {text}")
+                                    current_section = []
+                                elif ':' in text and len(text) < 50:  # Likely a label
+                                    if current_section:
+                                        formatted_markdown.append('\n'.join(current_section))
+                                    formatted_markdown.append(f"**{text}**")
+                                    current_section = []
+                                elif text.startswith(('Date:', 'From:', 'To:', 'Rent:', 'Landlord:', 'Tenant:')):
+                                    if current_section:
+                                        formatted_markdown.append('\n'.join(current_section))
+                                    formatted_markdown.append(f"**{text}**")
+                                    current_section = []
+                                else:
+                                    current_section.append(text)
+                            
+                            # Add any remaining content
+                            if current_section:
+                                formatted_markdown.append('\n'.join(current_section))
+                            
+                            return ['\n\n'.join(formatted_markdown)] if formatted_markdown else filtered_texts
+        except Exception:
+            pass
+        
+        # Fallback: Try native markdown_texts if available
         md = getattr(page, "markdown", None)
         if isinstance(md, dict):
             texts = md.get("markdown_texts") or md.get("md_texts")
             if isinstance(texts, list):
-                return [str(t) for t in texts if str(t).strip()]
+                non_empty = [str(t) for t in texts if str(t).strip()]
+                if len(non_empty) > 3:  # If we have substantial content
+                    return non_empty
+            elif isinstance(texts, str):
+                if len(texts.strip()) > 50:  # If we have substantial content
+                    return [texts.strip()]
 
-        # 2) dict keys
+        # Final fallback: Dict-based access
         if isinstance(page, dict):
             md = page.get("markdown")
             if isinstance(md, dict):
                 texts = md.get("markdown_texts") or md.get("md_texts")
                 if isinstance(texts, list):
                     return [str(t) for t in texts if str(t).strip()]
+                elif isinstance(texts, str):
+                    return [texts.strip()] if texts.strip() else []
             elif isinstance(md, list):
                 return [str(t) for t in md if str(t).strip()]
-
-            # Some builds expose 'res_md' as already-joined markdown list
-            if isinstance(page.get("res_md"), list):
-                return [str(t) for t in page["res_md"] if str(t).strip()]
-
-        # 3) fallback: attempt to reconstruct from 'res' (layout blocks)
-        #    We'll just join text fragments to give *some* markdown
-        texts_out: List[str] = []
-        try:
-            blocks = None
-            if isinstance(page, dict):
-                blocks = page.get("res") or page.get("layout_parsing_result")
-            elif hasattr(page, "__dict__"):
-                blocks = getattr(page, "res", None) or getattr(page, "layout_parsing_result", None)
-
-            if isinstance(blocks, list):
-                for b in blocks:
-                    # Grab any plausible text fields (common keys across builds)
-                    for k in ("text", "res_text", "content"):
-                        if isinstance(b, dict) and isinstance(b.get(k), str):
-                            t = b[k].strip()
-                            if t:
-                                texts_out.append(t)
-            if texts_out:
-                return [ "\n".join(texts_out) ]
-        except Exception:
-            pass
 
         return []
 
@@ -449,7 +473,7 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
             for k in candidates:
                 if k in page:
                     assembled[k] = page[k]
-                    else:
+        else:
             for k in candidates:
                 val = getattr(page, k, None)
                 if val is not None:
@@ -466,7 +490,7 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
             with os.fdopen(fd, "wb") as fp:
                 fp.write(file_data)
             predict_input = tmp_path
-            else:
+        else:
             img = Image.open(io.BytesIO(file_data))
             predict_input = np.array(img)
 
@@ -486,29 +510,27 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
             # Join pages with a visible delimiter
             full_markdown = "\n\n---\n\n".join([p for p in page_md_list if p])
 
-        return {
-            "pipeline": "PP-StructureV3 - Markdown",
+            return {
+                "pipeline": "PP-StructureV3 - Markdown",
                 "description": "Markdown assembled from PP-StructureV3 native/fallback outputs per page.",
-            "markdown": full_markdown,
+                "markdown": full_markdown,
                 "pages": page_md_list,
                 "total_pages": len(page_md_list),
-        }
-        
-    elif output_format == "json":
+            }
+        elif output_format == "json":
             pages: List[Dict[str, Any]] = []
             for page in results:
                 j = _page_to_json(page)
                 pages.append(_convert_to_serializable(j))
 
-        return {
-            "pipeline": "PP-StructureV3 - JSON",
+            return {
+                "pipeline": "PP-StructureV3 - JSON",
                 "description": "Structured JSON extracted from PP-StructureV3 with robust fallbacks.",
                 "pages": pages,
                 "total_pages": len(pages),
-        }
-    
-    else:
-        raise ValueError(f"Unsupported output format: {output_format}")
+            }
+        else:
+            raise ValueError(f"Unsupported output format: {output_format}")
 
     finally:
         if tmp_path and os.path.exists(tmp_path):

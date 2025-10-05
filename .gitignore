@@ -47,4 +47,5 @@ test_image.png
 # Test files
 test_*.ps1
 test_*.py
-
+*.jpg
+*.pdf
