@@ -60,7 +60,7 @@ test_*.sh
 *.txt
 sample_*
 example_*
-paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl
+
 # Docker
 .dockerignore
 
@@ -68,6 +68,7 @@ paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl
 *.whl
 models/
 .paddlex/
+paddlepaddle_gpu-*.whl
 
 # Development notes
 *_NOTES.md
