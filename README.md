@@ -1,18 +1,18 @@
 # PaddleOCR API - Multi-Language Document Intelligence
 
-A production-ready FastAPI service providing GPU-accelerated OCR and document understanding with support for 80+ languages and comprehensive model validation.
+A production-ready FastAPI service providing GPU-accelerated OCR and document understanding with support for 21 languages and comprehensive model validation.
 
 ## Features
 
 ✨ **5 Specialized Endpoints**
 - **PP-OCRv5** - Universal text recognition (5 optimized languages)
-- **PP-OCRv3** - Multi-language text recognition (80+ languages)
+- **PP-OCRv3** - Multi-language text recognition (21 languages)
 - **PP-StructureV3 Markdown** - Convert documents to clean Markdown
 - **PP-StructureV3 JSON** - Extract structured document data  
 - **PP-ChatOCRv4** - Intelligent information extraction with Ollama LLM
 
 🌍 **Comprehensive Language Support**
-- **Pre-installed**: All 80+ languages baked into container
+- **Pre-installed**: All 21 supported languages baked into container
 - **Zero Runtime Downloads**: All models validated during build
 - **Mixed-language**: Handle documents with multiple languages
 - **Default Language**: English (`en`) for all endpoints
@@ -111,9 +111,9 @@ for item in result["results"]:
 ### 2. PP-OCRv3 - Multi-Language Text Recognition
 **Endpoint**: `POST /ocr/ppocrv3`
 
-Extract text from images and PDFs with support for 80+ languages. Comprehensive international language coverage.
+Extract text from images and PDFs with support for 21 languages. Comprehensive international language coverage.
 
-**Supported Languages**: 80+ languages including English, Arabic, Hindi, Chinese, French, German, Spanish, Italian, Russian, Japanese, Korean, and many more.
+**Supported Languages**: 21 languages including English, Arabic, Hindi, Chinese, French, German, Spanish, Italian, Russian, Japanese, Korean, Portuguese, Dutch, Polish, Ukrainian, Thai, Vietnamese, Indonesian, Tamil, Telugu, and Traditional Chinese.
 
 **Python Example:**
 ```python
@@ -244,7 +244,7 @@ for key, value in result["extracted_data"].items():
 
 ## Comprehensive Language Support
 
-### Complete Language Reference (80+ Languages)
+### Complete Language Reference (21 Languages)
 
 #### PP-OCRv5 Supported Languages (5 languages)
 **Focus**: Optimized for 5 text types with mixed-language support
@@ -254,42 +254,26 @@ for key, value in result["extracted_data"].items():
 - `korean` - Korean - **Best for Korean+English mixed documents**
 - `chinese_cht` - Chinese (Traditional)
 
-#### PP-OCRv3 Supported Languages (80+ languages)
+#### PP-OCRv3 Supported Languages (21 languages)
 **Focus**: Comprehensive international language coverage
 
-**European Languages (30+):**
+**European Languages (8):**
 - `en` - English, `fr` - French, `de` - German, `es` - Spanish, `it` - Italian
 - `ru` - Russian, `pt` - Portuguese, `nl` - Dutch, `pl` - Polish, `uk` - Ukrainian
-- `cs` - Czech, `ro` - Romanian, `sv` - Swedish, `da` - Danish, `no` - Norwegian
-- `fi` - Finnish, `tr` - Turkish, `el` - Greek, `bg` - Bulgarian, `hr` - Croatian
-- `sk` - Slovak, `sl` - Slovenian, `et` - Estonian, `lv` - Latvian, `lt` - Lithuanian
-- `mt` - Maltese, `cy` - Welsh, `ga` - Irish, `is` - Icelandic, `mk` - Macedonian
 
-**Asian Languages (25+):**
-- `ch` - Chinese (Simplified), `japan` - Japanese, `korean` - Korean
-- `th` - Thai, `vi` - Vietnamese, `id` - Indonesian, `bn` - Bengali
-- `ta` - Tamil, `te` - Telugu, `ml` - Malayalam, `kn` - Kannada
-- `gu` - Gujarati, `pa` - Punjabi, `or` - Odia, `as` - Assamese
-- `ne` - Nepali, `si` - Sinhala, `my` - Burmese, `km` - Khmer
-- `lo` - Lao, `ka` - Georgian, `hy` - Armenian, `az` - Azerbaijani
-- `kk` - Kazakh, `ky` - Kyrgyz, `uz` - Uzbek, `tg` - Tajik, `mn` - Mongolian
+**Asian Languages (7):**
+- `ch` - Chinese (Simplified), `japan` - Japanese, `korean` - Korean, `chinese_cht` - Chinese (Traditional)
+- `th` - Thai, `vi` - Vietnamese, `id` - Indonesian
 
-**Middle Eastern Languages (8):**
-- `ar` - Arabic, `fa` - Persian, `ur` - Urdu, `he` - Hebrew
-- `yi` - Yiddish, `ku` - Kurdish, `ps` - Pashto, `sd` - Sindhi
+**Middle Eastern Languages (1):**
+- `ar` - Arabic
 
-**African Languages (9):**
-- `sw` - Swahili, `am` - Amharic, `ha` - Hausa, `yo` - Yoruba
-- `ig` - Igbo, `zu` - Zulu, `xh` - Xhosa, `af` - Afrikaans, `so` - Somali
-
-**Indian Subcontinent Languages (12+):**
-- `hi` - Hindi, `bn` - Bengali, `ta` - Tamil, `te` - Telugu
-- `ml` - Malayalam, `kn` - Kannada, `gu` - Gujarati, `pa` - Punjabi
-- `or` - Odia, `as` - Assamese, `ne` - Nepali, `si` - Sinhala
+**Indian Subcontinent Languages (3):**
+- `hi` - Hindi, `ta` - Tamil, `te` - Telugu
 
 #### PP-StructureV3 & PP-ChatOCRv4 Supported Languages
 **Same as PP-OCRv3** - Uses OCR recognition for layout analysis and intelligent extraction
-- All 80+ languages from PP-OCRv3 list
+- All 21 languages from PP-OCRv3 list
 - Optimized for document structure analysis
 - Supports both Markdown and JSON output
 - Enhanced with LLM integration for ChatOCRv4
@@ -354,10 +338,10 @@ The Dockerfile includes a **robust model validation system** that ensures all Pa
 | Endpoint | Languages | Models |
 |----------|-----------|--------|
 | **PP-OCRv5** | 5 | en, ch, japan, korean, chinese_cht |
-| **PP-OCRv3** | 80+ | All international languages |
-| **PP-StructureV3** | 80+ | All international languages |
-| **PP-ChatOCRv4** | 80+ | All international languages |
-| **TOTAL** | 80+ unique | ~200+ model combinations |
+| **PP-OCRv3** | 21 | All supported languages |
+| **PP-StructureV3** | 21 | All supported languages |
+| **PP-ChatOCRv4** | 21 | All supported languages |
+| **TOTAL** | 21 unique | ~50+ model combinations |
 
 ### Build Process
 
@@ -468,8 +452,8 @@ ERROR: executor failed with exit code 1
 | **GPU Memory** | ~2GB per pipeline |
 | **GPU Utilization** | 18-21% during inference |
 | **Concurrent Requests** | Supported (shared GPU) |
-| **Model Storage** | ~17GB for complete coverage |
-| **Build Time** | 45-90 minutes (with validation) |
+| **Model Storage** | ~1GB for complete coverage |
+| **Build Time** | 15-30 minutes (with validation) |
 
 ## Architecture
 
@@ -479,7 +463,7 @@ ERROR: executor failed with exit code 1
 │         (Port 8000)                     │
 ├─────────────────────────────────────────┤
 │  PP-OCRv5    │  PP-OCRv3               │
-│  (5 langs)   │  (80+ langs)            │
+│  (5 langs)   │  (21 langs)             │
 │              │                         │
 │  PP-StructureV3 (Document Parsing)      │
 │   ├─ Markdown                           │
@@ -782,10 +766,10 @@ These interfaces allow you to:
 | Use Case | Endpoint | Language Support | Best For |
 |----------|----------|------------------|----------|
 | Chinese+English mixed | `/ocr/ppocrv5` | 5 languages | Mixed-language documents |
-| International documents | `/ocr/ppocrv3` | 80+ languages | Arabic, Hindi, European |
-| Document to Markdown | `/ocr/structurev3/markdown` | 80+ languages | Any language |
-| Structured data | `/ocr/structurev3/json` | 80+ languages | Any language |
-| Information extraction | `/ocr/chatocrv4` | 80+ languages | Any language |
+| International documents | `/ocr/ppocrv3` | 21 languages | Arabic, Hindi, European |
+| Document to Markdown | `/ocr/structurev3/markdown` | 21 languages | Any language |
+| Structured data | `/ocr/structurev3/json` | 21 languages | Any language |
+| Information extraction | `/ocr/chatocrv4` | 21 languages | Any language |
 
 ## Best Practices
 

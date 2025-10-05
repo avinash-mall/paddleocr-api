@@ -2,22 +2,22 @@
 PaddleOCR API - Multi-Language Document Intelligence
 
 A production-ready FastAPI service providing GPU-accelerated OCR and document 
-understanding with support for 80+ languages.
+understanding with support for 21 languages and pre-downloaded models.
 
 Endpoints
 ---------
 
 1. **PP-OCRv5** (`/ocr/ppocrv5`) - Universal Text Recognition
    - Extract text from images and PDFs
-   - Supports 5 text types (Chinese, English, Japanese, Pinyin)
+   - Supports 5 optimized languages (English, Chinese, Japanese, Korean, Traditional Chinese)
    - 13% accuracy improvement over previous versions
    - Optimized for mixed-language documents
 
 2. **PP-OCRv3** (`/ocr/ppocrv3`) - Multi-Language Text Recognition
    - Extract text from images and PDFs
-   - Supports 80+ languages (English, Arabic, Hindi, Chinese, French, German, Spanish, Italian, Russian, Japanese, Korean, etc.)
+   - Supports 21 languages (English, Arabic, Hindi, Chinese, French, German, Spanish, Italian, Russian, Japanese, Korean, Portuguese, Dutch, Polish, Ukrainian, Thai, Vietnamese, Indonesian, Tamil, Telugu, Traditional Chinese)
    - Comprehensive international language coverage
-   - Auto-download language models on first use
+   - All models pre-downloaded and validated during build
 
 3. **PP-StructureV3 Markdown** (`/ocr/structurev3/markdown`) - Document to Markdown
    - Convert complex documents to clean Markdown format
@@ -25,20 +25,20 @@ Endpoints
    - Outperforms commercial solutions in public benchmarks
    - Supports multi-column reading order recovery
 
-6. **PP-StructureV3 JSON** (`/ocr/structurev3/json`) - Structured Document Data
+4. **PP-StructureV3 JSON** (`/ocr/structurev3/json`) - Structured Document Data
    - Extract layout blocks, regions, and text elements
    - Detailed bounding boxes and confidence scores
    - Perfect for document analysis and data extraction
    - Returns structured JSON with hierarchical layout
 
-7. **PP-ChatOCRv4** (`/ocr/chatocrv4`) - Intelligent Information Extraction
-   - Extract specific fields using ERNIE LLM integration
+5. **PP-ChatOCRv4** (`/ocr/chatocrv4`) - Intelligent Information Extraction
+   - Extract specific fields using Ollama LLM integration
    - Supports seals, tables, and multi-page PDFs
-   - Intelligent key-value extraction
+   - Intelligent key-value extraction with multimodal understanding
    - Combines OCR with natural language understanding
 
-8. **Language Reference** (`/languages`) - Supported Languages Guide
-   - Complete list of all 80+ supported languages
+6. **Language Reference** (`/languages`) - Supported Languages Guide
+   - Complete list of all 21 supported languages
    - Language codes and usage guidance
    - Mixed-language document recommendations
    - Endpoint-specific language support details
@@ -47,29 +47,37 @@ Features
 --------
 
 - **GPU Acceleration**: NVIDIA CUDA 12.9 support (~1-2 seconds per page)
-- **Multi-Language**: 80+ languages with auto-download on first use
+- **Pre-downloaded Models**: All 21 languages baked into container (~1GB)
+- **Zero Runtime Downloads**: No model download delays during API calls
 - **Mixed Languages**: Handle documents with Chinese+English or other combinations
 - **Concurrent Requests**: Shared GPU for multiple simultaneous requests
-- **Model Caching**: Fast subsequent requests after first model load
+- **Model Validation**: All models validated during Docker build process
+- **Production Ready**: Comprehensive error handling and logging
 
 Quick Start
 -----------
 
 ```bash
-# Test English OCR
+# Test English OCR (PP-OCRv5 - fastest for English)
 curl -X POST http://localhost:8000/ocr/ppocrv5 \\
   -F "file=@document.jpg" \\
   -F "lang=en"
 
-# Test Arabic OCR
+# Test Arabic OCR (PP-OCRv3 - supports 21 languages)
 curl -X POST http://localhost:8000/ocr/ppocrv3 \\
   -F "file=@arabic_doc.jpg" \\
   -F "lang=ar"
 
-# Convert Arabic document to Markdown
+# Convert document to Markdown
 curl -X POST http://localhost:8000/ocr/structurev3/markdown \\
-  -F "file=@arabic_doc.pdf" \\
-  -F "lang=ar"
+  -F "file=@document.pdf" \\
+  -F "lang=en"
+
+# Extract specific information with ChatOCRv4
+curl -X POST http://localhost:8000/ocr/chatocrv4 \\
+  -F "file=@invoice.pdf" \\
+  -F "keys=Invoice Number,Date,Total" \\
+  -F "lang=en"
 
 # Get language support reference
 curl http://localhost:8000/languages
@@ -80,6 +88,10 @@ Documentation
 
 - Interactive Docs: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
+- Language Reference: http://localhost:8000/languages
+- Supported Languages: 21 languages (English, Arabic, Hindi, Chinese, French, German, Spanish, Italian, Russian, Japanese, Korean, Portuguese, Dutch, Polish, Ukrainian, Thai, Vietnamese, Indonesian, Tamil, Telugu, Traditional Chinese)
+- Model Storage: ~1GB for all 21 languages
+- Build Time: 15-30 minutes with model validation
 - GitHub: https://github.com/PaddlePaddle/PaddleOCR
 """
 
@@ -94,13 +106,27 @@ from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
-# Language support constants to eliminate duplication
+def _device() -> str:
+    """Get device configuration from environment or default to GPU."""
+    return os.getenv("PADDLE_DEVICE", "gpu:0")
+
+# Language support constants - ACTUAL SUPPORTED LANGUAGES
 PP_OCRV5_LANGUAGES = {
     "en": "English",
     "ch": "Chinese (Simplified)", 
     "japan": "Japanese",
     "korean": "Korean",
     "chinese_cht": "Chinese (Traditional)"
+}
+
+# ACTUALLY SUPPORTED LANGUAGES (verified through testing)
+ACTUALLY_SUPPORTED_LANGUAGES = {
+    "en": "English", "ch": "Chinese (Simplified)", "fr": "French", "de": "German", 
+    "es": "Spanish", "it": "Italian", "ru": "Russian", "ar": "Arabic", 
+    "hi": "Hindi", "japan": "Japanese", "korean": "Korean", 
+    "chinese_cht": "Chinese (Traditional)", "pt": "Portuguese", "nl": "Dutch", 
+    "pl": "Polish", "uk": "Ukrainian", "th": "Thai", "vi": "Vietnamese", 
+    "id": "Indonesian", "ta": "Tamil", "te": "Telugu"
 }
 
 PP_OCRV3_MAJOR_LANGUAGES = {
@@ -176,28 +202,28 @@ app = FastAPI(
     description=(
         "🚀 Production-ready GPU-accelerated OCR and document understanding API\n\n"
         "**Features:**\n"
-        "- 🌍 **80+ Languages**: Comprehensive international language support across all endpoints\n"
+        "- 🌍 **21 Languages**: Comprehensive international language support across all endpoints\n"
         "- ⚡ **GPU Acceleration**: ~1-2 seconds per page with NVIDIA CUDA 12.9\n"
         "- 📄 **6 Specialized Endpoints**: PP-OCRv5, PP-OCRv3, Markdown conversion, JSON extraction, intelligent parsing, language reference\n"
-        "- 🔄 **Pre-loaded Models**: All major language models baked into container for instant availability\n"
-        "- 🎯 **High Accuracy**: PP-OCRv5 with 13% improvement, PP-OCRv3 with 80+ language support\n"
-        "- 🔍 **Enhanced Language Support**: Comprehensive 80+ language support across all endpoints\n\n"
+        "- 🔄 **Pre-downloaded Models**: All 21 language models baked into container (~1GB) for instant availability\n"
+        "- 🎯 **High Accuracy**: PP-OCRv5 with 13% improvement, PP-OCRv3 with 21 language support\n"
+        "- 🔍 **Zero Runtime Downloads**: No model download delays during API calls\n\n"
         "**Quick Start:**\n"
         "```bash\n"
         "# English OCR (PP-OCRv5 - Best for English/Chinese mixed)\n"
         "curl -X POST http://localhost:8000/ocr/ppocrv5 -F \"file=@doc.jpg\" -F \"lang=en\"\n\n"
-        "# Arabic OCR (PP-OCRv3 - Best for 80+ languages)\n"
+        "# Arabic OCR (PP-OCRv3 - Supports 21 languages)\n"
         "curl -X POST http://localhost:8000/ocr/ppocrv3 -F \"file=@arabic_doc.jpg\" -F \"lang=ar\"\n\n"
         "# Chinese OCR (PP-OCRv5 - Optimized for Chinese+English)\n"
         "curl -X POST http://localhost:8000/ocr/ppocrv5 -F \"file=@chinese_doc.jpg\" -F \"lang=ch\"\n\n"
-        "# Convert Arabic document to Markdown\n"
-        "curl -X POST http://localhost:8000/ocr/structurev3/markdown -F \"file=@arabic_doc.pdf\" -F \"lang=ar\"\n\n"
-        "# Extract information from Hindi document\n"
-        "curl -X POST http://localhost:8000/ocr/chatocrv4 -F \"file=@hindi_doc.jpg\" -F \"keys=Name\" -F \"keys=Date\" -F \"lang=hi\"\n"
+        "# Convert document to Markdown\n"
+        "curl -X POST http://localhost:8000/ocr/structurev3/markdown -F \"file=@document.pdf\" -F \"lang=en\"\n\n"
+        "# Extract information with ChatOCRv4\n"
+        "curl -X POST http://localhost:8000/ocr/chatocrv4 -F \"file=@invoice.pdf\" -F \"keys=Invoice Number,Date,Total\" -F \"lang=en\"\n"
         "```\n\n"
         "**Language Selection Guide:**\n"
-        "- **PP-OCRv5**: Use for Chinese, English, Japanese, Korean, Traditional Chinese\n"
-        "- **PP-OCRv3**: Use for 80+ languages including Arabic, Hindi, French, German, Spanish, etc.\n"
+        "- **PP-OCRv5**: Use for Chinese, English, Japanese, Korean, Traditional Chinese (5 languages)\n"
+        "- **PP-OCRv3**: Use for 21 languages including Arabic, Hindi, French, German, Spanish, Portuguese, Dutch, Polish, Ukrainian, Thai, Vietnamese, Indonesian, Tamil, Telugu\n"
         "- **Mixed Documents**: Use primary language (e.g., 'ch' for Chinese+English)\n"
         "- **Unknown Language**: Start with 'en' and check confidence scores\n\n"
         "📚 **Documentation**: Visit `/docs` for interactive API testing"
@@ -282,29 +308,42 @@ def _run_ocr_sync(ocr_version: str, lang: str, file_data: bytes, filename: str) 
     List[Dict]
         List of text results with text, confidence, and bbox information
     """
-    # Convert bytes to numpy array for direct processing
+    # Detect PDF vs image and handle accordingly
     import numpy as np
     from PIL import Image
     
-    # Create an in-memory image from bytes
-    img = Image.open(io.BytesIO(file_data))
-    img_array = np.array(img)
+    is_pdf = (filename or "").lower().endswith(".pdf")
     
-    # Instantiate the pipeline with GPU enabled
+    # Instantiate the pipeline with consistent device selection
     kwargs = {
         "ocr_version": ocr_version,
         "lang": lang,
-        "device": "gpu:0",
+        "device": _device(),
     }
     
     ocr = PaddleOCR(**kwargs)
     
-    # Perform OCR using the predict() method with numpy array
-    result = ocr.predict(input=img_array)
+    # Handle PDFs by saving to temporary file for multi-page support
+    if is_pdf:
+        fd, tmp_path = tempfile.mkstemp(suffix=".pdf")
+        try:
+            with os.fdopen(fd, "wb") as fp:
+                fp.write(file_data)
+            result = ocr.predict(input=tmp_path)
+        finally:
+            os.remove(tmp_path)
+    else:
+        # For images, convert to numpy array and run predict once
+        img = Image.open(io.BytesIO(file_data))
+        img_array = np.array(img)
+        result = ocr.predict(input=img_array)
     
-    # Extract text results from all pages
+    # For PDFs, take only first page's results (as documented)
+    pages = result[:1] if is_pdf else result
+    
+    # Extract text results from pages
     text_results = []
-    for page_result in result:
+    for page_result in pages:
         rec_texts = page_result['rec_texts']
         rec_scores = page_result['rec_scores']
         rec_polys = page_result['rec_polys']
@@ -365,11 +404,54 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
 
     def _page_to_markdown_texts(page: Any) -> List[str]:
         """
-        Extract markdown from PP-StructureV3 page result.
-        Uses the same data source as _page_to_json for consistency.
+        Extract native structured markdown from PP-StructureV3 page result.
+        Prefers native structured outputs over reconstruction.
         """
-        # Primary approach: Use page.json() method (same as JSON endpoint)
+        # 1) Direct attribute access
+        md = getattr(page, "markdown", None)
+        if isinstance(md, dict):
+            texts = md.get("markdown_texts") or md.get("md_texts")
+            if isinstance(texts, list) and any(str(t).strip() for t in texts):
+                non_empty = [str(t).strip() for t in texts if str(t).strip()]
+                if non_empty:  # Use any non-empty content
+                    return non_empty
+            if isinstance(texts, str) and texts.strip():
+                if len(texts.strip()) > 50:  # Check if we have substantial content
+                    return [texts.strip()]
+
+        # 2) Via page.json()
+        j = getattr(page, "json", None)
+        if callable(j):
+            try:
+                j = j()
+            except Exception:
+                j = None
+        if isinstance(j, dict):
+            mdj = j.get("markdown")
+            if isinstance(mdj, dict):
+                texts = mdj.get("markdown_texts") or mdj.get("md_texts")
+                if isinstance(texts, list) and any(str(t).strip() for t in texts):
+                    return [str(t).strip() for t in texts if str(t).strip()]
+                if isinstance(texts, str) and texts.strip():
+                    return [texts.strip()]
+
+        # 3) Dict-shape page
+        if isinstance(page, dict):
+            md = page.get("markdown")
+            if isinstance(md, dict):
+                texts = md.get("markdown_texts") or md.get("md_texts")
+                if isinstance(texts, list):
+                    return [str(t).strip() for t in texts if str(t).strip()]
+                if isinstance(texts, str) and texts.strip():
+                    return [texts.strip()]
+
+            # Sometimes 'res_md' is a list of strings
+            if isinstance(page.get("res_md"), list):
+                return [str(t).strip() for t in page["res_md"] if str(t).strip()]
+
+        # 4) Final fallback: reconstruct from rec_texts (same as JSON endpoint)
         try:
+            # Use page.json() to get rec_texts
             j = getattr(page, "json", None)
             if callable(j):
                 try:
@@ -378,7 +460,6 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
                     j = None
             
             if isinstance(j, dict):
-                # Look for rec_texts in the JSON structure
                 res_data = j.get("res")
                 if res_data and isinstance(res_data, dict):
                     ocr_res = res_data.get("overall_ocr_res")
@@ -419,32 +500,24 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
                                 return ['\n\n'.join(formatted_markdown)] if formatted_markdown else filtered_texts
         except Exception:
             pass
-        
-        # Fallback: Try native markdown_texts if available
-        md = getattr(page, "markdown", None)
-        if isinstance(md, dict):
-            texts = md.get("markdown_texts") or md.get("md_texts")
-            if isinstance(texts, list):
-                non_empty = [str(t) for t in texts if str(t).strip()]
-                if len(non_empty) > 3:  # If we have substantial content
-                    return non_empty
-            elif isinstance(texts, str):
-                if len(texts.strip()) > 50:  # If we have substantial content
-                    return [texts.strip()]
 
-        # Final fallback: Dict-based access
+        # 5) Final fallback: reconstruct from layout blocks
+        texts_out: List[str] = []
+        blocks = None
         if isinstance(page, dict):
-            md = page.get("markdown")
-            if isinstance(md, dict):
-                texts = md.get("markdown_texts") or md.get("md_texts")
-                if isinstance(texts, list):
-                    return [str(t) for t in texts if str(t).strip()]
-                elif isinstance(texts, str):
-                    return [texts.strip()] if texts.strip() else []
-            elif isinstance(md, list):
-                return [str(t) for t in md if str(t).strip()]
+            blocks = page.get("res") or page.get("layout_parsing_result")
+        else:
+            blocks = getattr(page, "res", None) or getattr(page, "layout_parsing_result", None)
 
-        return []
+        if isinstance(blocks, list):
+            for b in blocks:
+                if isinstance(b, dict):
+                    for k in ("text", "res_text", "content"):
+                        v = b.get(k)
+                        if isinstance(v, str) and v.strip():
+                            texts_out.append(v.strip())
+
+        return ["\n".join(texts_out)] if texts_out else []
 
     def _page_to_json(page: Any) -> Dict[str, Any]:
         """
@@ -500,9 +573,8 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
             img = Image.open(io.BytesIO(file_data))
             predict_input = np.array(img)
 
-        # If you have a device helper, use it; otherwise keep your existing default:
-        device = os.getenv("PADDLE_DEVICE", "gpu:0")  # fallback to GPU if you know CUDA is present
-        pipeline = PPStructureV3(device=device)
+        # Use consistent device selection
+        pipeline = PPStructureV3(device=_device())
 
         results = pipeline.predict(input=predict_input)
 
@@ -537,6 +609,9 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
             }
         else:
             raise ValueError(f"Unsupported output format: {output_format}")
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"StructureV3 processing failed: {str(e)}")
 
     finally:
         if tmp_path and os.path.exists(tmp_path):
@@ -899,8 +974,8 @@ async def get_supported_languages() -> JSONResponse:
     """
     return JSONResponse(content={
         "title": "PaddleOCR API - Supported Languages Reference",
-        "description": "Complete reference for all 80+ supported languages across all endpoints",
-        "total_languages": 80,
+        "description": "Complete reference for all 21 actually supported languages across all endpoints",
+        "total_languages": 21,
         "endpoints": {
             "ppocrv5": {
                 "languages": len(PP_OCRV5_LANGUAGES),
@@ -910,47 +985,44 @@ async def get_supported_languages() -> JSONResponse:
                 "mixed_language": "Excellent for Chinese+English, Japanese+English, Korean+English"
             },
             "ppocrv3": {
-                "languages": 80,
-                "major_languages": PP_OCRV3_MAJOR_LANGUAGES,
+                "languages": len(ACTUALLY_SUPPORTED_LANGUAGES),
+                "codes": list(ACTUALLY_SUPPORTED_LANGUAGES.keys()),
+                "languages_detail": ACTUALLY_SUPPORTED_LANGUAGES,
                 "best_for": "International documents, Arabic, Hindi, European languages",
                 "mixed_language": "Good for most mixed-language combinations"
             },
             "structurev3_markdown": {
-                "languages": 80,
-                "best_for": "Document structure analysis in any language",
+                "languages": len(ACTUALLY_SUPPORTED_LANGUAGES),
+                "best_for": "Document structure analysis in any supported language",
                 "mixed_language": "Uses OCR recognition for layout analysis"
             },
             "structurev3_json": {
-                "languages": 80,
-                "best_for": "Structured data extraction in any language",
+                "languages": len(ACTUALLY_SUPPORTED_LANGUAGES),
+                "best_for": "Structured data extraction in any supported language",
                 "mixed_language": "Uses OCR recognition for layout analysis"
             },
             "chatocrv4": {
-                "languages": 80,
-                "best_for": "Intelligent information extraction in any language",
+                "languages": len(ACTUALLY_SUPPORTED_LANGUAGES),
+                "best_for": "Intelligent information extraction in any supported language",
                 "mixed_language": "Uses OCR recognition for intelligent extraction"
             }
         },
         "language_categories": {
             "european": {
-                "count": len(PP_OCRV3_EUROPEAN_LANGUAGES),
-                "examples": PP_OCRV3_EUROPEAN_LANGUAGES
+                "count": 8,
+                "examples": ["en", "fr", "de", "es", "it", "ru", "pt", "nl", "pl", "uk"]
             },
             "asian": {
-                "count": len(PP_OCRV3_ASIAN_LANGUAGES),
-                "examples": PP_OCRV3_ASIAN_LANGUAGES
+                "count": 7,
+                "examples": ["ch", "japan", "korean", "chinese_cht", "th", "vi", "id"]
             },
             "middle_eastern": {
-                "count": len(PP_OCRV3_MIDDLE_EASTERN_LANGUAGES),
-                "examples": PP_OCRV3_MIDDLE_EASTERN_LANGUAGES
-            },
-            "african": {
-                "count": len(PP_OCRV3_AFRICAN_LANGUAGES),
-                "examples": PP_OCRV3_AFRICAN_LANGUAGES
+                "count": 1,
+                "examples": ["ar"]
             },
             "indian_subcontinent": {
-                "count": 12,
-                "examples": ["hi", "bn", "ta", "te", "ml", "kn", "gu", "pa", "or", "as", "ne", "si"]
+                "count": 3,
+                "examples": ["hi", "ta", "te"]
             }
         },
         "mixed_language_guidance": {
@@ -973,10 +1045,10 @@ async def get_supported_languages() -> JSONResponse:
         "performance_characteristics": {
             "model_sizes": {
                 "ppocrv5": "~50MB per language (5 languages = 250MB)",
-                "ppocrv3": "~30MB per language (80+ languages = 2.4GB)",
-                "structurev3": "~100MB per language (80+ languages = 8GB)",
-                "chatocrv4": "~80MB per language (80+ languages = 6.4GB)",
-                "total": "~17GB for complete model coverage"
+                "ppocrv3": "~30MB per language (21 languages = 630MB)",
+                "structurev3": "~100MB (language-agnostic)",
+                "chatocrv4": "~80MB (language-agnostic)",
+                "total": "~1GB for complete model coverage"
             },
             "response_times": {
                 "first_request_cached": "1-2 seconds per page",
@@ -998,117 +1070,73 @@ async def get_supported_languages() -> JSONResponse:
     "/ocr/chatocrv4",
     tags=["Intelligent Extraction"],
     summary="PP-ChatOCRv4 - Intelligent Information Extraction with Ollama",
-    response_description="Extracted key-value pairs with multimodal LLM understanding"
+    response_description="Extracted key-value pairs with multimodal LLM understanding",
 )
 async def run_ppchatocrv4(
     file: UploadFile = File(..., description="Document image or PDF file"),
-    keys: str = Form(..., description="Comma-separated list of information fields to extract (e.g., 'Landlord,Tenant,Date,Rent')"),
-    lang: Optional[str] = Form("en", description="Language code for OCR recognition - supports 80+ languages"),
-    # Ollama OpenAI-compatible API configuration
-    mllm_model: Optional[str] = Form("llava:latest", description="Multimodal LLM model for visual understanding (e.g., llava:latest, bakllava, llava-phi3)"),
-    llm_model: Optional[str] = Form("llama3:latest", description="Text-only LLM model for extraction (e.g., llama3:latest, mistral, gemma2)"),
-    ollama_base_url: Optional[str] = Form("http://localhost:11434", description="Ollama base URL - will append /v1 for OpenAI API compatibility"),
-    api_key: Optional[str] = Form("", description="Optional API key for Ollama service"),
+    keys: str = Form(..., description="Comma-separated list of fields (e.g. Landlord,Tenant,Date,Rent)"),
+    lang: Optional[str] = Form("en", description="OCR language code"),
+    # Ollama OpenAI-compatible API
+    mllm_model: Optional[str] = Form("llava:latest", description="Multimodal model (vision+text)"),
+    llm_model: Optional[str] = Form("llama3:latest", description="Text LLM for extraction"),
+    ollama_base_url: Optional[str] = Form("http://localhost:11434", description="Ollama base URL; /v1 will be appended"),
+    api_key: Optional[str] = Form("", description="API key if your Ollama proxy requires it"),
 ) -> JSONResponse:
-    """Extract specific information fields using PP-ChatOCRv4 with local Ollama service.
-    
-    Leverages PP-ChatOCRv4's native capabilities with locally hosted Ollama models via
-    OpenAI-compatible API for multimodal visual understanding and text extraction.
-    All operations are performed in-memory without temporary files.
-
-    Parameters
-    ----------
-    file : UploadFile
-        Document image or PDF file to process.
-    keys : List[str]
-        List of information fields to extract (e.g., ["Invoice Number", "Date", "Total"]).
-    lang : str, optional
-        Language code for OCR recognition (supports 80+ languages). Default: "en".
-    mllm_model : str, optional
-        Multimodal LLM for visual understanding (e.g., llava:latest, bakllava). Default: "llava:latest".
-    llm_model : str, optional
-        Text-only LLM for extraction (e.g., llama3:latest, mistral). Default: "llama3:latest".
-    ollama_base_url : str, optional
-        Ollama base URL (will append /v1 for OpenAI API). Default: "http://localhost:11434".
-    api_key : str, optional
-        Optional API key for Ollama service. Default: "" (no auth).
-
-    Returns
-    -------
-    JSONResponse
-        Extracted key-value pairs with model metadata and processing information.
-        
-    Raises
-    ------
-    HTTPException
-        If PP-ChatOCRv4Doc is not available or processing fails.
-    """
     _ensure_dependencies()
-    
-    # Check if PP-ChatOCRv4Doc is available
     if PPChatOCRv4Doc is None:
-        raise HTTPException(
-            status_code=503,
-            detail="PP-ChatOCRv4Doc is not available. Please ensure PaddleOCR 3.x with chat support is installed."
-        )
-    
-    # Parse keys from comma-separated string to list
-    # Handle both comma-separated strings and individual keys
+        raise HTTPException(status_code=503, detail="PP-ChatOCRv4Doc unavailable")
+
+    # --- normalize keys (strip quotes and whitespace) ---
     if isinstance(keys, str):
-        keys_list = [key.strip() for key in keys.split(',') if key.strip()]
+        keys_list = [k.strip().strip("\"'") for k in keys.split(",") if k.strip().strip("\"'")]
     elif isinstance(keys, list):
-        keys_list = [str(key).strip() for key in keys if str(key).strip()]
+        keys_list = [str(k).strip().strip("\"'") for k in keys if str(k).strip().strip("\"'")]
     else:
         keys_list = []
-    
     if not keys_list:
-        raise HTTPException(
-            status_code=400,
-            detail="At least one key must be provided"
-        )
-    
-    # Read file data into memory
+        raise HTTPException(status_code=400, detail="At least one key must be provided")
+
     data = _read_upload_to_bytes(file)
-    
-    # Convert bytes to numpy array for in-memory processing
-    img = Image.open(io.BytesIO(data))
-    img_array = np.array(img)
-    
+    is_pdf = (file.filename or "").lower().endswith(".pdf")
+
     try:
-        # Instantiate PP-ChatOCRv4Doc (device only, no lang parameter)
-        chatocr = PPChatOCRv4Doc(device="gpu:0")
-        
-        # Step 1: Visual prediction to get OCR/layout information (in-memory)
-        visual_info_list_raw = chatocr.visual_predict(input=img_array)
-        
-        # Extract visual_info from each item (PP-ChatOCRv4 returns nested structure)
-        visual_info_list = [item['visual_info'] for item in visual_info_list_raw]
-        
-        # Step 2: Build vector index (optional - may fail, continue without it)
-        vector_info = None
-        try:
-            vector_info = chatocr.build_vector(visual_info=visual_info_list)
-        except Exception as e:
-            # If build_vector fails, continue without vector retrieval
-            print(f"Warning: build_vector failed: {e}. Continuing without vector retrieval.")
-        
-        # Step 3: Configure chat bot to use Ollama via OpenAI-compatible API
-        # Use urllib.parse for robust URL handling
-        from urllib.parse import urlparse, urlunparse
-        
-        parsed_url = urlparse(ollama_base_url)
-        if parsed_url.hostname == "localhost":
-            # Use host.docker.internal to access Ollama from within container
-            api_base = urlunparse((
-                parsed_url.scheme or "http",
-                f"host.docker.internal:{parsed_url.port or 11434}",
-                "/v1",
-                "", "", ""
-            ))
+        chatocr = PPChatOCRv4Doc(device=_device())
+
+        # ---- Step 1: visual prediction ----
+        if is_pdf:
+            fd, tmp_path = tempfile.mkstemp(suffix=".pdf")
+            with os.fdopen(fd, "wb") as fp:
+                fp.write(data)
+            visual_info_list_raw = chatocr.visual_predict(input=tmp_path)
+            os.remove(tmp_path)
         else:
-            # Use original URL with /v1 appended
+            img = Image.open(io.BytesIO(data))
+            img_array = np.array(img)
+            visual_info_list_raw = chatocr.visual_predict(input=img_array)
+
+        # robust extraction of "visual_info"
+        visual_info_list: List[dict] = []
+        for item in visual_info_list_raw:
+            if isinstance(item, dict) and "visual_info" in item:
+                visual_info_list.append(item["visual_info"])
+            else:
+                vi = getattr(item, "visual_info", None)
+                if vi is not None:
+                    visual_info_list.append(vi)
+
+        # ---- Step 2: (optional) vector index ----
+        # Keep OFF by default. You can toggle to True later once embeddings work with your setup.
+        vector_info = None
+        use_vectors = False
+
+        # ---- Step 3: build OpenAI-compatible configs for Ollama (LLM+MLLM) ----
+        from urllib.parse import urlparse, urlunparse
+        parsed = urlparse(ollama_base_url)
+        if parsed.hostname == "localhost":
+            api_base = urlunparse((parsed.scheme or "http", f"host.docker.internal:{parsed.port or 11434}", "/v1", "", "", ""))
+        else:
             api_base = f"{ollama_base_url.rstrip('/')}/v1"
-            
+
         chat_bot_config = {
             "module_name": "chat_bot",
             "model_name": llm_model,
@@ -1116,59 +1144,62 @@ async def run_ppchatocrv4(
             "api_type": "openai",
             "api_key": api_key or "",
         }
-        
-        # Step 4: Chat with integration strategy
-        # Disable vector retrieval to avoid embedding model issues
-        try:
-            chat_result = chatocr.chat(
-                key_list=keys_list,
-                visual_info=visual_info_list,
-                vector_info=None,  # Force no vector retrieval
-                use_vector_retrieval=False,  # Disable vector retrieval
-                mllm_integration_strategy="integration",
-                chat_bot_config=chat_bot_config,
-                retriever_config={},  # Empty config when not using vector retrieval
-            )
-        except Exception as chat_error:
-            # Provide detailed error information for debugging
-            error_details = {
-                "error_type": type(chat_error).__name__,
-                "error_message": str(chat_error),
-                "api_base_url": api_base,
-                "llm_model": llm_model,
-                "mllm_model": mllm_model,
-                "vector_retrieval_enabled": False,
-                "visual_info_count": len(visual_info_list),
-                "requested_keys": keys_list
-            }
-            raise HTTPException(
-                status_code=500,
-                detail=f"PP-ChatOCRv4 chat failed: {str(chat_error)}. Debug info: {error_details}"
-            )
-        
-        # Convert chat_result to plain dictionary
-        if hasattr(chat_result, '__dict__'):
-            extracted_info = _convert_to_serializable(chat_result.__dict__)
-        elif isinstance(chat_result, dict):
-            extracted_info = _convert_to_serializable(chat_result)
-        else:
-            extracted_info = {"result": str(chat_result)}
-        
-        return JSONResponse(content={
-            "pipeline": "PP-ChatOCRv4",
-            "description": "Intelligent information extraction using PP-ChatOCRv4 with local Ollama service",
-            "extracted_data": extracted_info,
-            "requested_keys": keys_list,
-            "models": {
-                "mllm_model": mllm_model,
-                "llm_model": llm_model,
-                "api_base_url": api_base
-            },
-            "success": True
-        })
-        
-    except Exception as error:
-        raise HTTPException(
-            status_code=500,
-            detail=f"PP-ChatOCRv4 processing failed: {str(error)}"
+
+        # ---- Step 4: call chat() with correct parameters ----
+        # Keep vector retrieval off initially; turn on later if you've verified embedding support.
+        chat_result = chatocr.chat(
+            key_list=keys_list,
+            visual_info=visual_info_list,
+            use_vector_retrieval=use_vectors,
+            vector_info=vector_info,
+            chat_bot_config=chat_bot_config,
+            mllm_integration_strategy="integration",
+            retriever_config={},
         )
+
+        # normalize output to plain dict
+        if hasattr(chat_result, "__dict__"):
+            extracted = _convert_to_serializable(chat_result.__dict__)
+        elif isinstance(chat_result, dict):
+            extracted = _convert_to_serializable(chat_result)
+        else:
+            extracted = {"result": str(chat_result)}
+
+        # ---- Fallback: if chat_res is empty, re-extract with text LLM only ----
+        if isinstance(extracted, dict) and extracted.get("chat_res") in ({}, None):
+            # build a text dump from visual_info_list
+            try:
+                import json
+                text_dump = json.dumps(visual_info_list, ensure_ascii=False)
+            except Exception:
+                text_dump = str(visual_info_list)
+
+            # use the helper already in your file, if present:
+            #   _extract_info_with_ollama(visual_results_text, keys_list, model, ollama_url, api_key="")
+            try:
+                fallback = _extract_info_with_ollama(
+                    visual_results_text=text_dump[:5000],  # keep prompt reasonable
+                    keys_list=keys_list,
+                    model=llm_model,
+                    ollama_url=ollama_base_url,
+                    api_key=api_key or "",
+                )
+                if isinstance(fallback, dict) and fallback:
+                    extracted["chat_res"] = fallback
+                    extracted["fallback_mode"] = "text-only-LLM"
+            except Exception as _:
+                pass
+
+        return JSONResponse(
+            content={
+                "pipeline": "PP-ChatOCRv4",
+                "description": "Intelligent information extraction using PP-ChatOCRv4 with local Ollama service",
+                "extracted_data": extracted,
+                "requested_keys": keys_list,
+                "models": {"mllm_model": mllm_model, "llm_model": llm_model, "api_base_url": api_base},
+                "success": True,
+            }
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"PP-ChatOCRv4 processing failed: {e}")

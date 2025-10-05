@@ -31,10 +31,12 @@ env/
 .idea/
 *.swp
 *.swo
+*.sublime-*
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Git
 .git/
@@ -43,11 +45,38 @@ Thumbs.db
 # Docker
 Dockerfile
 .dockerignore
+docker-compose.yml
 
 # Logs
 *.log
+logs/
 
 # Temporary files
 *.tmp
 *.temp
+*.bak
+*.backup
+
+# Test files and documents
+test_*.py
+test_*.ps1
+test_*.sh
+*.jpg
+*.jpeg
+*.png
+*.pdf
+*.docx
+*.txt
+sample_*
+example_*
+
+# Development notes
+*_NOTES.md
+TODO.md
+NOTES.md
+README.md
+
+# Model files (will be downloaded during build)
+models/
+.paddlex/
 

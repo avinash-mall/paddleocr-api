@@ -31,21 +31,45 @@ env/
 .idea/
 *.swp
 *.swo
+*.sublime-*
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Logs
 *.log
+logs/
 
 # Temporary files
 *.tmp
 *.temp
-test_image.png
+*.bak
+*.backup
 
-# Test files
-test_*.ps1
+# Test files and documents
 test_*.py
+test_*.ps1
+test_*.sh
 *.jpg
+*.jpeg
+*.png
 *.pdf
+*.docx
+*.txt
+sample_*
+example_*
+
+# Docker
+.dockerignore
+
+# Model files (large files)
+*.whl
+models/
+.paddlex/
+
+# Development notes
+*_NOTES.md
+TODO.md
+NOTES.md

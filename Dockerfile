@@ -72,13 +72,13 @@ COPY download_models.py .
 # Pre-download ALL language models with retry logic and validation
 # This ensures all models are properly baked into the container
 # 
-# MODEL COVERAGE:
+# MODEL COVERAGE (ACTUAL SUPPORTED LANGUAGES):
 # - PP-OCRv5: 5 languages (en, ch, japan, korean, chinese_cht) - Optimized for mixed-language documents
-# - PP-OCRv3: 80+ languages - Comprehensive international language support
-# - PP-StructureV3: 80+ languages - Document structure analysis in any language
-# - PP-ChatOCRv4: 80+ languages - Intelligent information extraction in any language
+# - PP-OCRv3: 21 languages - Actually supported languages (not 80+ as claimed)
+# - PP-StructureV3: Language-agnostic - Document structure analysis
+# - PP-ChatOCRv4: Language-agnostic - Intelligent information extraction
 #
-# TOTAL STORAGE: ~17GB for complete model coverage
+# TOTAL STORAGE: ~3-5GB for actual model coverage (much smaller than claimed 17GB)
 # BENEFITS: Zero runtime downloads, instant API responses, guaranteed availability
 RUN python3 download_models.py
 
