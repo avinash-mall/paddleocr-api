@@ -106,9 +106,51 @@ from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
+# ---------- Common pipeline flag helpers (used by all endpoints) ----------
+def _to_bool(v):
+    """Robust bool parser for FastAPI Form inputs (accepts true/false/1/0/yes/no/on/off)."""
+    if isinstance(v, bool):
+        return v
+    if v is None:
+        return False
+    return str(v).strip().lower() in {"1", "true", "t", "yes", "y", "on"}
+
+def _build_predict_flags(
+    use_doc_preprocessor=None,
+    use_doc_orientation_classify=None,
+    use_doc_unwarping=None,
+    use_textline_orientation=None,
+):
+    """Create the dict of PaddleX pipeline flags passed to predict()."""
+    flags = {}
+    # Note: use_doc_preprocessor is not supported by PaddleOCR predict() method
+    # Only these three parameters are actually supported:
+    if use_doc_orientation_classify is not None:
+        flags["use_doc_orientation_classify"] = _to_bool(use_doc_orientation_classify)
+    if use_doc_unwarping is not None:
+        flags["use_doc_unwarping"] = _to_bool(use_doc_unwarping)
+    if use_textline_orientation is not None:
+        flags["use_textline_orientation"] = _to_bool(use_textline_orientation)
+    return flags
+
 def _device() -> str:
-    """Get device configuration from environment or default to GPU."""
-    return os.getenv("PADDLE_DEVICE", "gpu:0")
+    """Get device configuration from environment or default to GPU with clear messaging."""
+    import paddle
+    device = os.getenv("PADDLE_DEVICE", "gpu:0")  # Default to GPU for better performance
+    
+    # Check if CUDA is available
+    if device.startswith("gpu"):
+        if paddle.is_compiled_with_cuda():
+            print(f"[GPU] Acceleration enabled: {device}")
+            return device
+        else:
+            print("[WARNING] GPU requested but CUDA not available in PaddlePaddle build")
+            print("          Falling back to CPU. For GPU acceleration, install PaddlePaddle GPU version:")
+            print("          pip install paddlepaddle-gpu")
+            return "cpu"
+    
+    print(f"[INFO] Using CPU device: {device}")
+    return device
 
 # Language support constants - ACTUAL SUPPORTED LANGUAGES
 PP_OCRV5_LANGUAGES = {
@@ -289,7 +331,11 @@ def _save_to_temporary_file(data: bytes, suffix: str = "") -> str:
     return path
 
 
-def _run_ocr_sync(ocr_version: str, lang: str, file_data: bytes, filename: str) -> List[Dict]:
+def _run_ocr_sync(
+    ocr_version: str,
+    lang: str,
+    file_data: bytes, filename: str, predict_flags: Optional[Dict[str, Any]] = None
+) -> List[Dict]:
     """Synchronous OCR logic that will be run in a thread pool.
     
     Parameters
@@ -321,7 +367,7 @@ def _run_ocr_sync(ocr_version: str, lang: str, file_data: bytes, filename: str) 
         "device": _device(),
     }
     
-    ocr = PaddleOCR(**kwargs)
+    ocr = PaddleOCR(**kwargs)  # PaddleX OCR pipeline
     
     # Handle PDFs by saving to temporary file for multi-page support
     if is_pdf:
@@ -329,14 +375,14 @@ def _run_ocr_sync(ocr_version: str, lang: str, file_data: bytes, filename: str) 
         try:
             with os.fdopen(fd, "wb") as fp:
                 fp.write(file_data)
-            result = ocr.predict(input=tmp_path)
+            result = ocr.predict(input=tmp_path, **(predict_flags or {}))
         finally:
             os.remove(tmp_path)
     else:
         # For images, convert to numpy array and run predict once
         img = Image.open(io.BytesIO(file_data))
         img_array = np.array(img)
-        result = ocr.predict(input=img_array)
+        result = ocr.predict(input=img_array, **(predict_flags or {}))
     
     # For PDFs, take only first page's results (as documented)
     pages = result[:1] if is_pdf else result
@@ -358,7 +404,12 @@ def _run_ocr_sync(ocr_version: str, lang: str, file_data: bytes, filename: str) 
     return text_results
 
 
-async def _run_ocr(ocr_version: str, lang: str, file_data: bytes, filename: str) -> List[Dict]:
+async def _run_ocr(
+    ocr_version: str,
+    lang: str,
+    file_data: bytes, filename: str,
+    predict_flags: Optional[Dict[str, Any]] = None
+) -> List[Dict]:
     """Async wrapper for OCR logic that runs in a thread pool to avoid blocking the event loop.
     
     Parameters
@@ -379,7 +430,9 @@ async def _run_ocr(ocr_version: str, lang: str, file_data: bytes, filename: str)
     """
     try:
         # Run the synchronous OCR logic in a thread pool
-        return await asyncio.to_thread(_run_ocr_sync, ocr_version, lang, file_data, filename)
+        return await asyncio.to_thread(
+            _run_ocr_sync, ocr_version, lang, file_data, filename, predict_flags
+        )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"OCR inference failed: {exc}")
 
@@ -576,7 +629,21 @@ def _run_structurev3_sync(lang: str, file_data: bytes, filename: str, output_for
         # Use consistent device selection
         pipeline = PPStructureV3(device=_device())
 
-        results = pipeline.predict(input=predict_input)
+        # Get pipeline flags from global state
+        predict_flags = globals().get("_LAST_PREDICT_FLAGS", {}) or {}
+        
+        # Filter flags to only include those supported by PP-StructureV3
+        # PP-StructureV3 may not support all pipeline flags, so we try with flags first,
+        # then fall back to no flags if there's an error
+        try:
+            results = pipeline.predict(input=predict_input, **predict_flags)
+        except Exception as e:
+            if "unexpected keyword argument" in str(e) or "has no attribute" in str(e):
+                # Fall back to predict without pipeline flags
+                results = pipeline.predict(input=predict_input)
+            else:
+                # Re-raise if it's a different error
+                raise
 
         if output_format == "markdown":
             page_md_list: List[str] = []
@@ -792,6 +859,11 @@ Only return the JSON response, no additional text.
 async def run_ppocrv5(
     file: UploadFile = File(..., description="Image (JPG, PNG) or PDF file to process"),
     lang: Optional[str] = Form("en", description="Language code: en (English), ch (Chinese), japan (Japanese), korean (Korean), chinese_cht (Traditional Chinese)"),
+    # ---- Pipeline feature flags (apply to ALL pipelines) ----
+    use_doc_preprocessor: Optional[bool] = Form(False, description="Enable document preprocessing subline"),
+    use_doc_orientation_classify: Optional[bool] = Form(True, description="Auto-detect page orientation"),
+    use_doc_unwarping: Optional[bool] = Form(False, description="Perspective/unwarping correction"),
+    use_textline_orientation: Optional[bool] = Form(False, description="Correct rotated text lines"),
 ) -> JSONResponse:
     """Extract text from images and PDFs using PP-OCRv5 pipeline.
     
@@ -817,15 +889,24 @@ async def run_ppocrv5(
     # Read the uploaded file into memory
     data = _read_upload_to_bytes(file)
     
-    # Use the common OCR helper (now async)
-    text_results = await _run_ocr("PP-OCRv5", lang, data, file.filename or "")
+    # Build and propagate predict() flags
+    predict_flags = _build_predict_flags(
+        use_doc_preprocessor,
+        use_doc_orientation_classify,
+        use_doc_unwarping,
+        use_textline_orientation,
+    )
+    globals()["_LAST_PREDICT_FLAGS"] = predict_flags  # used by Structure helper too
+    text_results = await _run_ocr("PP-OCRv5", lang, data, file.filename or "", predict_flags)
     
-    return JSONResponse(content={
+    response_content = {
         "pipeline": "PP-OCRv5",
         "description": "Universal Scene Text Recognition - Single model supports five text types (Simplified Chinese, Traditional Chinese, English, Japanese, and Pinyin) with 13% accuracy improvement. Solves multilingual mixed document recognition challenges.",
         "results": text_results,
-        "total_texts": len(text_results)
-    })
+        "total_texts": len(text_results),
+        "pipeline_flags": predict_flags,
+    }
+    return JSONResponse(content=response_content)
 
 
 @app.post(
@@ -837,6 +918,11 @@ async def run_ppocrv5(
 async def run_ppocrv3(
     file: UploadFile = File(..., description="Image (JPG, PNG) or PDF file to process"),
     lang: Optional[str] = Form("en", description="Language code: en (English), ar (Arabic), hi (Hindi), ch (Chinese), fr (French), de (German), es (Spanish), it (Italian), ru (Russian), japan (Japanese), korean (Korean), and 70+ more languages"),
+    # ---- Same flags for v3 ----
+    use_doc_preprocessor: Optional[bool] = Form(False),
+    use_doc_orientation_classify: Optional[bool] = Form(True),
+    use_doc_unwarping: Optional[bool] = Form(False),
+    use_textline_orientation: Optional[bool] = Form(False),
 ) -> JSONResponse:
     """Extract text from images and PDFs using PP-OCRv3 pipeline with support for 80+ languages.
     
@@ -861,14 +947,21 @@ async def run_ppocrv3(
     # Read the uploaded file into memory
     data = _read_upload_to_bytes(file)
     
-    # Use the common OCR helper (now async)
-    text_results = await _run_ocr("PP-OCRv3", lang, data, file.filename or "")
+    predict_flags = _build_predict_flags(
+        use_doc_preprocessor,
+        use_doc_orientation_classify,
+        use_doc_unwarping,
+        use_textline_orientation,
+    )
+    globals()["_LAST_PREDICT_FLAGS"] = predict_flags
+    text_results = await _run_ocr("PP-OCRv3", lang, data, file.filename or "", predict_flags)
     
     return JSONResponse(content={
         "pipeline": "PP-OCRv3",
         "description": "Multi-Language Text Recognition - Supports 80+ languages with comprehensive coverage for international document processing. Optimized for multilingual text recognition with high accuracy across diverse language families.",
         "results": text_results,
         "total_texts": len(text_results),
+        "pipeline_flags": predict_flags,
         "supported_languages": "80+ languages including English, Arabic, Hindi, Chinese, French, German, Spanish, Italian, Russian, Japanese, Korean, and many more"
     })
 
@@ -882,6 +975,11 @@ async def run_ppocrv3(
 async def run_ppstructurev3_markdown(
     file: UploadFile = File(..., description="Document image or PDF file"),
     lang: Optional[str] = Form("en", description="Language code for OCR recognition - supports 80+ languages including en, ar, hi, ch, fr, de, es, it, ru, japan, korean, and many more"),
+    # ---- Same flags for StructureV3 ----
+    use_doc_preprocessor: Optional[bool] = Form(False),
+    use_doc_orientation_classify: Optional[bool] = Form(True),
+    use_doc_unwarping: Optional[bool] = Form(False),
+    use_textline_orientation: Optional[bool] = Form(False),
 ) -> JSONResponse:
     """Convert complex documents to clean Markdown format with preserved structure.
     
@@ -908,9 +1006,16 @@ async def run_ppstructurev3_markdown(
     # Read the uploaded file into memory
     data = _read_upload_to_bytes(file)
     
-    # Use the common StructureV3 helper (now async)
+    predict_flags = _build_predict_flags(
+        use_doc_preprocessor,
+        use_doc_orientation_classify,
+        use_doc_unwarping,
+        use_textline_orientation,
+    )
+    globals()["_LAST_PREDICT_FLAGS"] = predict_flags
     result = await _run_structurev3(lang, data, file.filename or "", "markdown")
-    
+
+    result["pipeline_flags"] = predict_flags
     return JSONResponse(content=result)
 
 
@@ -923,6 +1028,11 @@ async def run_ppstructurev3_markdown(
 async def run_ppstructurev3_json(
     file: UploadFile = File(..., description="Document image or PDF file"),
     lang: Optional[str] = Form("en", description="Language code for OCR recognition - supports 80+ languages including en, ar, hi, ch, fr, de, es, it, ru, japan, korean, and many more"),
+    # ---- Same flags for StructureV3 ----
+    use_doc_preprocessor: Optional[bool] = Form(False),
+    use_doc_orientation_classify: Optional[bool] = Form(True),
+    use_doc_unwarping: Optional[bool] = Form(False),
+    use_textline_orientation: Optional[bool] = Form(False),
 ) -> JSONResponse:
     """Extract structured JSON data with layout blocks, regions, and text elements.
     
@@ -949,9 +1059,16 @@ async def run_ppstructurev3_json(
     # Read the uploaded file into memory
     data = _read_upload_to_bytes(file)
     
-    # Use the common StructureV3 helper (now async)
+    predict_flags = _build_predict_flags(
+        use_doc_preprocessor,
+        use_doc_orientation_classify,
+        use_doc_unwarping,
+        use_textline_orientation,
+    )
+    globals()["_LAST_PREDICT_FLAGS"] = predict_flags
     result = await _run_structurev3(lang, data, file.filename or "", "json")
-    
+
+    result["pipeline_flags"] = predict_flags
     return JSONResponse(content=result)
 
 
@@ -1076,6 +1193,11 @@ async def run_ppchatocrv4(
     file: UploadFile = File(..., description="Document image or PDF file"),
     keys: str = Form(..., description="Comma-separated list of fields (e.g. Landlord,Tenant,Date,Rent)"),
     lang: Optional[str] = Form("en", description="OCR language code"),
+    # ---- Same flags for ChatOCR ----
+    use_doc_preprocessor: Optional[bool] = Form(False),
+    use_doc_orientation_classify: Optional[bool] = Form(True),
+    use_doc_unwarping: Optional[bool] = Form(False),
+    use_textline_orientation: Optional[bool] = Form(False),
     # Ollama OpenAI-compatible API
     mllm_model: Optional[str] = Form("llava:latest", description="Multimodal model (vision+text)"),
     llm_model: Optional[str] = Form("llama3:latest", description="Text LLM for extraction"),
@@ -1103,16 +1225,23 @@ async def run_ppchatocrv4(
         chatocr = PPChatOCRv4Doc(device=_device())
 
         # ---- Step 1: visual prediction ----
+        predict_flags = _build_predict_flags(
+            use_doc_preprocessor,
+            use_doc_orientation_classify,
+            use_doc_unwarping,
+            use_textline_orientation,
+        )
+        globals()["_LAST_PREDICT_FLAGS"] = predict_flags
         if is_pdf:
             fd, tmp_path = tempfile.mkstemp(suffix=".pdf")
             with os.fdopen(fd, "wb") as fp:
                 fp.write(data)
-            visual_info_list_raw = chatocr.visual_predict(input=tmp_path)
+            visual_info_list_raw = chatocr.visual_predict(input=tmp_path, **predict_flags)
             os.remove(tmp_path)
         else:
             img = Image.open(io.BytesIO(data))
             img_array = np.array(img)
-            visual_info_list_raw = chatocr.visual_predict(input=img_array)
+            visual_info_list_raw = chatocr.visual_predict(input=img_array, **predict_flags)
 
         # robust extraction of "visual_info"
         visual_info_list: List[dict] = []
@@ -1190,16 +1319,21 @@ async def run_ppchatocrv4(
             except Exception as _:
                 pass
 
-        return JSONResponse(
-            content={
-                "pipeline": "PP-ChatOCRv4",
-                "description": "Intelligent information extraction using PP-ChatOCRv4 with local Ollama service",
-                "extracted_data": extracted,
-                "requested_keys": keys_list,
-                "models": {"mllm_model": mllm_model, "llm_model": llm_model, "api_base_url": api_base},
-                "success": True,
-            }
-        )
+        payload = {
+            "pipeline": "PP-ChatOCRv4",
+            "description": "Intelligent information extraction using PP-ChatOCRv4 with local Ollama service",
+            "extracted_data": extracted,
+            "requested_keys": keys_list,
+            "models": {"mllm_model": mllm_model, "llm_model": llm_model, "api_base_url": api_base},
+            "success": True,
+        }
+        payload["pipeline_flags"] = predict_flags
+        return JSONResponse(content=payload)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"PP-ChatOCRv4 processing failed: {e}")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
