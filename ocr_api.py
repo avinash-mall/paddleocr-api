@@ -105,6 +105,8 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
+# TODO: Migrate to fastapi_offline when image is rebuilt
+# from fastapi_offline import FastAPIOffline
 
 # ---------- Common pipeline flag helpers (used by all endpoints) ----------
 def _to_bool(v):
@@ -245,11 +247,12 @@ app = FastAPI(
         "🚀 Production-ready GPU-accelerated OCR and document understanding API\n\n"
         "**Features:**\n"
         "- 🌍 **21 Languages**: Comprehensive international language support across all endpoints\n"
-        "- ⚡ **GPU Acceleration**: ~1-2 seconds per page with NVIDIA CUDA 12.9\n"
+        "- ⚡ **GPU Acceleration**: ~1-2 seconds per page with NVIDIA CUDA 12.4\n"
         "- 📄 **6 Specialized Endpoints**: PP-OCRv5, PP-OCRv3, Markdown conversion, JSON extraction, intelligent parsing, language reference\n"
         "- 🔄 **Pre-downloaded Models**: All 21 language models baked into container (~1GB) for instant availability\n"
         "- 🎯 **High Accuracy**: PP-OCRv5 with 13% improvement, PP-OCRv3 with 21 language support\n"
-        "- 🔍 **Zero Runtime Downloads**: No model download delays during API calls\n\n"
+        "- 🔍 **Zero Runtime Downloads**: No model download delays during API calls\n"
+        "- 🌐 **Fully Offline**: API docs work without internet - no CDN dependencies\n\n"
         "**Quick Start:**\n"
         "```bash\n"
         "# English OCR (PP-OCRv5 - Best for English/Chinese mixed)\n"

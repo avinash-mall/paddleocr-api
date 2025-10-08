@@ -1,11 +1,15 @@
 # Use NVIDIA CUDA runtime as base image
-FROM nvidia/cuda:12.9.1-cudnn-runtime-ubuntu24.04
+FROM nvidia/cuda:12.4.0-base-ubuntu22.04
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 ENV CUDA_VISIBLE_DEVICES=0
 ENV PIP_DEFAULT_TIMEOUT=100
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
+ENV PATH=/usr/local/cuda/bin:${PATH}
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -22,7 +26,6 @@ RUN apt-get update && apt-get install -y \
     libgcc-s1 \
     wget \
     curl \
-    libgthread-2.0-0 \
     libx11-6 \
     libfontconfig1 \
     libfreetype6 \
@@ -37,50 +40,41 @@ WORKDIR /app
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Copy the local paddlepaddle-gpu wheel (cp312 for Python 3.12)
-COPY paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl /tmp/
-
-# Remove Windows-specific paddlepaddle-gpu line
+# Remove Windows-specific paddlepaddle-gpu line from requirements.txt
 RUN sed -i '/paddlepaddle-gpu @ file/d' requirements.txt
 
-# Try to download paddlepaddle-gpu wheel online first
-RUN echo "Attempting to download PaddlePaddle-GPU 3.2.0 for cp312..." && \
-    (python3 -c "import urllib.request; urllib.request.urlretrieve('https://paddle-whl.bj.bcebos.com/stable/cu129/paddlepaddle-gpu/paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl', 'paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl')" || \
-     wget --timeout=30 --tries=3 https://paddle-whl.bj.bcebos.com/stable/cu129/paddlepaddle-gpu/paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl -O paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl || \
-     curl --connect-timeout 30 --max-time 60 https://paddle-whl.bj.bcebos.com/stable/cu129/paddlepaddle-gpu/paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl -o paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl || \
-     echo "Online download failed, will use local wheel") && \
-    echo "Download attempt completed"
+# Upgrade pip to latest version
+RUN python3 -m pip install --upgrade pip
 
-# Install paddlepaddle-gpu: try online download first, then local wheel
-RUN if [ -f paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl ] && [ $(stat -c%s paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl 2>/dev/null || echo 0) -gt 100000000 ]; then \
-        echo "✓ Installing PaddlePaddle-GPU 3.2.0 from downloaded cp312 wheel..." && \
-        python3 -m pip install --break-system-packages --no-cache-dir paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl; \
-    elif [ -f /tmp/paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl ]; then \
-        echo "✓ Installing PaddlePaddle-GPU 3.2.0 from local cp312 wheel..." && \
-        python3 -m pip install --break-system-packages --no-cache-dir /tmp/paddlepaddle_gpu-3.2.0-cp312-cp312-linux_x86_64.whl; \
-    else \
-        echo "✗ ERROR: No valid PaddlePaddle-GPU 3.2.0 wheel found!" && \
-        exit 1; \
-    fi
+# Install PaddlePaddle GPU 3.2.0 (required for PaddleX 3.2.1 compatibility)
+# PaddleX 3.2.1 requires PaddlePaddle 3.x for set_optimization_level() method
+# Ubuntu 22.04 has Python 3.10, so use cp310 wheel
+RUN wget -q https://github.com/avinash-mall/paddleocr-api/releases/download/paddlepaddle_gpu_py310/paddlepaddle_gpu-3.2.0-cp310-cp310-linux_x86_64.whl && \
+    python3 -m pip install --no-cache-dir paddlepaddle_gpu-3.2.0-cp310-cp310-linux_x86_64.whl && \
+    rm paddlepaddle_gpu-3.2.0-cp310-cp310-linux_x86_64.whl && \
+    echo "✓ PaddlePaddle GPU 3.2.0 (cp310) installed successfully"
 
 # Install minimal dependencies for the API
-RUN python3 -m pip install --break-system-packages --no-cache-dir -r requirements.txt uvicorn
+RUN python3 -m pip install --no-cache-dir -r requirements.txt uvicorn
 
 # Copy the model download script
 COPY download_models.py .
 
+# Set HOME directory for PaddlePaddle model cache
+ENV HOME=/root
+ENV PADDLEOCR_HOME=/root/.paddleocr
+ENV PADDLEX_HOME=/root/.paddlex
+
 # Pre-download ALL language models with retry logic and validation
-# This ensures all models are properly baked into the container
-# 
-# MODEL COVERAGE (ACTUAL SUPPORTED LANGUAGES):
-# - PP-OCRv5: 5 languages (en, ch, japan, korean, chinese_cht) - Optimized for mixed-language documents
-# - PP-OCRv3: 21 languages - Actually supported languages (not 80+ as claimed)
-# - PP-StructureV3: Language-agnostic - Document structure analysis
-# - PP-ChatOCRv4: Language-agnostic - Intelligent information extraction
-#
-# TOTAL STORAGE: ~3-5GB for actual model coverage (much smaller than claimed 17GB)
-# BENEFITS: Zero runtime downloads, instant API responses, guaranteed availability
-RUN python3 download_models.py
+# Models are cached in /root/.paddlex/official_models/
+# GPU errors during build are EXPECTED and handled correctly
+RUN mkdir -p /root/.paddleocr /root/.paddlex && \
+    python3 download_models.py && \
+    echo "=== Model Cache Summary ===" && \
+    echo "PaddleOCR cache: $(du -sh /root/.paddleocr 2>/dev/null || echo 'N/A')" && \
+    echo "PaddleX cache: $(du -sh /root/.paddlex 2>/dev/null || echo 'N/A')" && \
+    echo "Total files: $(find /root/.paddleocr /root/.paddlex -type f 2>/dev/null | wc -l)" && \
+    echo "==========================="
 
 # Create a default ocr_api.py (will be overridden by volume mount)
 RUN echo 'print("OCR API placeholder - mount your ocr_api.py file")' > ocr_api.py

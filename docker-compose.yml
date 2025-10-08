@@ -9,6 +9,14 @@ services:
       - ./ocr_api.py:/app/ocr_api.py:ro
     environment:
       - CUDA_VISIBLE_DEVICES=0
+      - LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/nvidia/lib64
+      - PATH=/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - PADDLE_DEVICE=gpu:0
+      - HOME=/root
+      - PADDLEOCR_HOME=/root/.paddleocr
+      - PADDLEX_HOME=/root/.paddlex
     deploy:
       resources:
         reservations:

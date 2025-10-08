@@ -66,9 +66,9 @@ test_*.sh
 *.png
 *.pdf
 *.docx
-*.txt
 sample_*
 example_*
+# Note: requirements.txt is NOT ignored - needed for Docker build!
 
 # Development notes
 *_NOTES.md
