@@ -1,673 +1,369 @@
 # PaddleOCR API - Multi-Language Document Intelligence
 
-A production-ready FastAPI service providing GPU-accelerated OCR and document understanding with support for 21 languages, fully offline operation, and pre-downloaded models.
+A production-ready FastAPI service providing GPU-accelerated OCR and document understanding with support for 21 languages and pre-downloaded models.
 
-## ✨ Key Features
+## Features
 
-- 🌍 **21 Languages**: Complete international coverage across all endpoints
-- ⚡ **GPU Accelerated**: NVIDIA CUDA 12.4 support (~1-2 seconds per page)
-- 📦 **Pre-cached Models**: 26/28 models baked into image for instant availability
-- 🌐 **Fully Offline**: API docs work without internet - no CDN dependencies
-- 🔒 **Air-Gap Ready**: Works in completely disconnected environments
-- 📄 **6 Endpoints**: PP-OCRv5, PP-OCRv3, StructureV3 (Markdown/JSON), ChatOCRv4, Languages
+- **🌍 21 Languages**: Comprehensive international language support (English, Arabic, Hindi, Chinese, French, German, Spanish, Italian, Russian, Japanese, Korean, Portuguese, Dutch, Polish, Ukrainian, Thai, Vietnamese, Indonesian, Tamil, Telugu, Traditional Chinese)
+- **⚡ GPU Acceleration**: NVIDIA CUDA 12.4 support (~1-2 seconds per page)
+- **📄 Multiple Pipelines**: PP-OCRv5, PP-OCRv3, PP-StructureV3, PP-ChatOCRv4
+- **🔄 Pre-downloaded Models**: All models baked into container (~1GB) for instant availability
+- **🎯 High Accuracy**: PP-OCRv5 with 13% improvement, PP-OCRv3 with 21 language support
+- **🔍 Zero Runtime Downloads**: No model download delays during API calls
+- **🌐 Document Parsing**: Convert documents to Markdown or extract structured JSON
+- **🤖 Intelligent Extraction**: LLM-powered information extraction with Ollama integration
 
-## 🚀 Quick Start
+## Prerequisites
 
-### Prerequisites
-- Docker with NVIDIA Container Toolkit
-- NVIDIA GPU with CUDA 12.4+ support (Driver 525+)
-- Docker Compose 2.0+
+- **Hardware**: NVIDIA GPU with CUDA support
+- **Software**:
+  - Docker with NVIDIA Container Toolkit
+  - Docker Compose
+  - NVIDIA GPU drivers (compatible with CUDA 12.4)
 
-### Build & Run
+## Quick Start
 
-```bash
-# One-time: Create GPU-enabled buildx builder
-docker buildx create --name gpu-builder --driver docker-container --use
-docker buildx inspect gpu-builder --bootstrap
+### 1. Build the Docker Image
 
-# Build with Docker Buildx (recommended for best results)
-docker buildx build --builder gpu-builder --load --progress=plain \
-  -t paddleocr-api:latest \
-  -t avinashmall84/paddleocr-api:latest .
-
-# Start the container
-docker-compose up -d
-
-# Check status
-docker-compose ps
-```
-
-**Build Time**: ~20 minutes (downloads PaddlePaddle 3.2.0 + models)  
-**Image Size**: 15.9GB (includes full CUDA libraries - see note below*)  
-**Models Cached**: 28/28 (100% ✅) - ALL models successfully cached!
-
-**Size Note**: PaddlePaddle 3.2.0 includes ~4.5GB of CUDA libraries (cuBLAS 580MB, cuDNN 781MB, etc.) for full GPU functionality. This is necessary for compatibility with PaddleX 3.2.1 and ensures all endpoints work correctly.
-
-### Test the API
-
-```bash
-# View API documentation (works offline!)
-http://localhost:8000/docs
-
-# Check supported languages
-curl http://localhost:8000/languages
-
-# Test English OCR
-curl -X POST http://localhost:8000/ocr/ppocrv5 \
-  -F "file=@document.jpg" \
-  -F "lang=en"
-
-# Test Arabic OCR
-curl -X POST http://localhost:8000/ocr/ppocrv3 \
-  -F "file=@arabic_doc.pdf" \
-  -F "lang=ar"
-
-# Convert document to Markdown
-curl -X POST http://localhost:8000/ocr/structurev3/markdown \
-  -F "file=@contract.pdf" \
-  -F "lang=en"
-```
-
-## 📋 API Endpoints
-
-### 1. PP-OCRv5 - Universal Text Recognition
-**POST** `/ocr/ppocrv5`
-
-Extract text with 13% accuracy improvement. Optimized for mixed-language documents.
-
-**Supported**: 5 languages (`en`, `ch`, `japan`, `korean`, `chinese_cht`)
-
-```bash
-curl -X POST http://localhost:8000/ocr/ppocrv5 \
-  -F "file=@document.jpg" \
-  -F "lang=en"
-```
-
-### 2. PP-OCRv3 - Multi-Language Recognition
-**POST** `/ocr/ppocrv3`
-
-Comprehensive international language support.
-
-**Supported**: 21 languages (English, Arabic, Hindi, Chinese, French, German, Spanish, Italian, Russian, Japanese, Korean, Portuguese, Dutch, Polish, Ukrainian, Thai, Vietnamese, Indonesian, Tamil, Telugu, Traditional Chinese)
-
-```bash
-curl -X POST http://localhost:8000/ocr/ppocrv3 \
-  -F "file=@document.pdf" \
-  -F "lang=ar"
-```
-
-### 3. PP-StructureV3 Markdown
-**POST** `/ocr/structurev3/markdown`
-
-Convert documents to Markdown with preserved structure.
-
-```bash
-curl -X POST http://localhost:8000/ocr/structurev3/markdown \
-  -F "file=@contract.pdf" \
-  -F "lang=en"
-```
-
-### 4. PP-StructureV3 JSON
-**POST** `/ocr/structurev3/json`
-
-Extract structured data with layout blocks and bounding boxes.
-
-```bash
-curl -X POST http://localhost:8000/ocr/structurev3/json \
-  -F "file=@form.jpg" \
-  -F "lang=en"
-```
-
-### 5. PP-ChatOCRv4 - Intelligent Extraction
-**POST** `/ocr/chatocrv4`
-
-Extract specific fields using LLM integration (requires Ollama).
-
-```bash
-curl -X POST http://localhost:8000/ocr/chatocrv4 \
-  -F "file=@invoice.pdf" \
-  -F "keys=Invoice Number,Date,Total" \
-  -F "lang=en" \
-  -F "ollama_base_url=http://192.168.1.133:11434"
-```
-
-**Note**: Requires Ollama service running. Install models:
-```bash
-ollama pull llama3:latest
-ollama pull llava:latest
-```
-
-### 6. Languages Reference
-**GET** `/languages`
-
-Get complete list of supported languages.
-
-```bash
-curl http://localhost:8000/languages
-```
-
-## 🏗️ Docker Configuration
-
-### Base Image
-```dockerfile
-FROM nvidia/cuda:12.4.0-base-ubuntu22.04
-```
-
-### Environment Variables (docker-compose.yml)
-```yaml
-environment:
-  - CUDA_VISIBLE_DEVICES=0
-  - LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/nvidia/lib64
-  - PATH=/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  - NVIDIA_VISIBLE_DEVICES=all
-  - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-  - PADDLE_DEVICE=gpu:0
-  - HOME=/root
-  - PADDLEOCR_HOME=/root/.paddleocr
-  - PADDLEX_HOME=/root/.paddlex
-```
-
-### GPU Configuration
-```yaml
-deploy:
-  resources:
-    reservations:
-      devices:
-        - driver: nvidia
-          count: 1
-          capabilities: [gpu]
-```
-
-## 📊 Build Process
-
-### What Happens During Build
-
-1. **System Packages** (~2 min)
-   - Installs Python 3.10, build tools, OpenCV dependencies
-
-2. **PaddlePaddle GPU** (~5 min)
-   - Downloads PaddlePaddle GPU wheel (~760MB)
-   - Installs with CUDA 12.4 support
-
-3. **Python Dependencies** (~2 min)
-   - Installs fastapi-offline (offline API docs)
-   - PaddleOCR, PaddleX, and other dependencies
-
-4. **Model Download** (~5-10 min)
-   - Downloads 26+ language models
-   - Caches in `/root/.paddlex/official_models/`
-   - 5 retries per model with 3-second delays
-   - Validates 80% success rate minimum
-
-5. **Image Export** (~2 min)
-   - Finalizes layers and exports image
-
-**Total Time**: 15-30 minutes  
-**Final Size**: ~6.5GB
-
-### Build with Docker Buildx (Recommended)
-
-**Step 1**: Create GPU-enabled builder (one-time setup)
-```bash
-docker buildx create --name gpu-builder --driver docker-container --use
-docker buildx inspect gpu-builder --bootstrap
-```
-
-**Step 2**: Build the image
-```bash
-docker buildx build --builder gpu-builder --load --progress=plain -t paddleocr-api:latest .
-```
-
-**Alternative**: Standard docker build
 ```bash
 docker build -t paddleocr-api:latest .
 ```
 
-**Benefits of Buildx**:
-- Better caching and layer management
-- Detailed progress output with `--progress=plain`
-- Parallel layer builds (faster)
-- Cross-platform support
-- Better handling of large images
+Build time: 15-30 minutes (includes downloading and validating all 21 language models)
 
-### GPU Errors During Build (Expected)
-
-During build, you'll see messages like:
-```
-✗ PP-OCRv5:en FAILED: 'paddle.base.libpaddle.AnalysisConfig' object has no attribute 'set_optimization_level'
-```
-
-**This is NORMAL and EXPECTED!** Here's why:
-
-1. **No GPU During Build**: Docker build doesn't have GPU access
-2. **Models Still Download**: Files are downloaded to `/root/.paddlex/`
-3. **Initialization Fails**: Can't load into GPU (no GPU available)
-4. **Validation Succeeds**: Detects that model files exist
-
-**Final Output**:
-```
-✓ PP-OCRv5: 5/5 (100.0%)
-✓ PP-OCRv3: 21/21 (100.0%)
-✓ TOTAL: 26/28 models (92.9% success rate)
-✓ MODEL VALIDATION SUCCESSFUL!
-✓ Container is ready for production use!
-```
-
-**At Runtime**: GPU is available, models load instantly ✅
-
-## 🧪 Testing
-
-### Verify GPU Access
-```bash
-docker exec paddleocr-paddleocr-api-1 nvidia-smi
-```
-
-Expected output:
-```
-+-----------------------------------------------------------------------------------------+
-| NVIDIA-SMI 581.29                 Driver Version: 581.29         CUDA Version: 12.4     |
-|--------------------------------------+------------------------+-------------------------+
-| GPU  Name                 TCC/WDDM | Bus-Id          Disp.A | Volatile Uncorr. ECC    |
-| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M.  |
-|                                         |                        |               MIG M.  |
-|======================================+========================+=========================|
-|   0  NVIDIA GeForce RTX 5070 Ti   WDDM | 00000000:01:00.0  On  |                    N/A |
-|  0%   40C    P8              15W /  285W |     738MiB /  16303MiB |      0%      Default |
-|                                         |                        |                  N/A |
-+--------------------------------------+------------------------+-------------------------+
-```
-
-### Verify Models
-```bash
-docker exec paddleocr-paddleocr-api-1 bash -c \
-  "find /root/.paddlex -type f | wc -l"
-```
-
-Expected: 38+ files
-
-### Test All Endpoints
+### 2. Start the Service
 
 ```bash
-# 1. Languages endpoint
-curl http://localhost:8000/languages
+docker compose up -d
+```
 
-# 2. PP-OCRv5 (English)
-curl -X POST http://localhost:8000/ocr/ppocrv5 \
-  -F "file=@test.jpg" \
+The API will be available at `http://localhost:8001`
+
+### 3. Test the API
+
+```bash
+# Test English OCR (PP-OCRv5 - fastest for English)
+curl -X POST http://localhost:8001/ocr/ppocrv5 \
+  -F "file=@document.jpg" \
   -F "lang=en"
 
-# 3. PP-OCRv3 (Arabic)
-curl -X POST http://localhost:8000/ocr/ppocrv3 \
-  -F "file=@test.jpg" \
+# Test Arabic OCR (PP-OCRv3 - supports 21 languages)
+curl -X POST http://localhost:8001/ocr/ppocrv3 \
+  -F "file=@arabic_doc.jpg" \
   -F "lang=ar"
 
-# 4. Structure to Markdown
-curl -X POST http://localhost:8000/ocr/structurev3/markdown \
-  -F "file=@test.pdf" \
+# Convert document to Markdown
+curl -X POST http://localhost:8001/ocr/structurev3/markdown \
+  -F "file=@document.pdf" \
   -F "lang=en"
+```
 
-# 5. Structure to JSON
-curl -X POST http://localhost:8000/ocr/structurev3/json \
-  -F "file=@test.pdf" \
+### 4. Access Interactive Documentation
+
+- **Swagger UI**: http://localhost:8001/docs
+- **ReDoc**: http://localhost:8001/redoc
+- **Language Reference**: http://localhost:8001/languages
+
+## API Endpoints
+
+### 1. PP-OCRv5 - Universal Text Recognition
+**Endpoint**: `POST /ocr/ppocrv5`
+
+Extract text from images and PDFs with 13% accuracy improvement over previous versions.
+
+**Supported Languages** (5): English, Chinese, Japanese, Korean, Traditional Chinese
+
+**Parameters**:
+- `file`: Image (JPG, PNG) or PDF file
+- `lang`: Language code (`en`, `ch`, `japan`, `korean`, `chinese_cht`)
+
+**Example**:
+```bash
+curl -X POST http://localhost:8001/ocr/ppocrv5 \
+  -F "file=@document.jpg" \
   -F "lang=en"
-
-# 6. ChatOCR extraction (requires Ollama)
-curl -X POST http://localhost:8000/ocr/chatocrv4 \
-  -F "file=@contract.jpg" \
-  -F "keys=tenant,landlord,rent" \
-  -F "lang=en" \
-  -F "ollama_base_url=http://192.168.1.133:11434"
 ```
 
-## 🔧 Configuration
+### 2. PP-OCRv3 - Multi-Language Text Recognition
+**Endpoint**: `POST /ocr/ppocrv3`
 
-### Model Download Settings
+Comprehensive international language coverage with 21 supported languages.
 
-Edit `download_models.py` to customize:
+**Supported Languages** (21): English, Arabic, Hindi, Chinese, French, German, Spanish, Italian, Russian, Japanese, Korean, Portuguese, Dutch, Polish, Ukrainian, Thai, Vietnamese, Indonesian, Tamil, Telugu, Traditional Chinese
 
-```python
-MAX_RETRIES = 5  # Number of retry attempts per model
-RETRY_DELAY = 3  # Seconds between retries
-MIN_SUCCESS_RATE = 0.80  # Minimum 80% models must succeed
-CRITICAL_LANGUAGES = ['en', 'ch', 'ar', 'hi']  # Must succeed
+**Parameters**:
+- `file`: Image (JPG, PNG) or PDF file
+- `lang`: Language code (e.g., `en`, `ar`, `hi`, `ch`, `fr`, `de`, `es`)
+
+**Example**:
+```bash
+curl -X POST http://localhost:8001/ocr/ppocrv3 \
+  -F "file=@document.jpg" \
+  -F "lang=ar"
 ```
 
-### Device Configuration
+### 3. PP-StructureV3 Markdown - Document to Markdown
+**Endpoint**: `POST /ocr/structurev3/markdown`
 
-```python
-# In ocr_api.py
-PADDLE_DEVICE = os.getenv("PADDLE_DEVICE", "gpu:0")
+Convert complex documents to clean Markdown format with preserved structure.
 
-# Or override via docker-compose.yml
-environment:
-  - PADDLE_DEVICE=cpu  # Use CPU instead of GPU
+**Parameters**:
+- `file`: Document image or PDF file
+- `lang`: Language code for OCR recognition
+
+**Example**:
+```bash
+curl -X POST http://localhost:8001/ocr/structurev3/markdown \
+  -F "file=@document.pdf" \
+  -F "lang=en"
 ```
 
-## 🌍 Language Support
+### 4. PP-StructureV3 JSON - Structured Document Data
+**Endpoint**: `POST /ocr/structurev3/json`
+
+Extract layout blocks, regions, and text elements with detailed bounding boxes.
+
+**Parameters**:
+- `file`: Document image or PDF file
+- `lang`: Language code for OCR recognition
+
+**Example**:
+```bash
+curl -X POST http://localhost:8001/ocr/structurev3/json \
+  -F "file=@document.pdf" \
+  -F "lang=en"
+```
+
+### 5. PP-ChatOCRv4 - Intelligent Information Extraction
+**Endpoint**: `POST /ocr/chatocrv4`
+
+Extract specific fields using Ollama LLM integration for intelligent key-value extraction.
+
+**Parameters**:
+- `file`: Document image or PDF file
+- `keys`: Comma-separated list of fields to extract (e.g., "Invoice Number,Date,Total")
+- `lang`: Language code for OCR recognition
+- `mllm_model`: Multimodal model (default: `llava:latest`)
+- `llm_model`: Text LLM for extraction (default: `llama3:latest`)
+- `ollama_base_url`: Ollama base URL (default: `http://localhost:11434`)
+
+**Example**:
+```bash
+curl -X POST http://localhost:8001/ocr/chatocrv4 \
+  -F "file=@invoice.pdf" \
+  -F "keys=Invoice Number,Date,Total" \
+  -F "lang=en"
+```
+
+**Note**: Requires Ollama running locally. Install from https://ollama.ai
+
+### 6. Language Reference
+**Endpoint**: `GET /languages`
+
+Get complete list of all supported languages with codes and usage guidance.
+
+**Example**:
+```bash
+curl http://localhost:8001/languages
+```
+
+## Supported Languages
 
 ### PP-OCRv5 (5 Languages)
-`en`, `ch`, `japan`, `korean`, `chinese_cht`
-
-Best for: Mixed-language documents (Chinese+English, Japanese+English)
+- `en` - English
+- `ch` - Chinese (Simplified)
+- `japan` - Japanese
+- `korean` - Korean
+- `chinese_cht` - Chinese (Traditional)
 
 ### PP-OCRv3 (21 Languages)
-**European**: en, fr, de, es, it, ru, pt, nl, pl, uk  
-**Asian**: ch, japan, korean, chinese_cht, th, vi, id  
-**Middle Eastern**: ar  
-**Indian**: hi, ta, te
+| Code | Language | Code | Language |
+|------|----------|------|----------|
+| `en` | English | `ar` | Arabic |
+| `ch` | Chinese (Simplified) | `hi` | Hindi |
+| `fr` | French | `de` | German |
+| `es` | Spanish | `it` | Italian |
+| `ru` | Russian | `japan` | Japanese |
+| `korean` | Korean | `pt` | Portuguese |
+| `nl` | Dutch | `pl` | Polish |
+| `uk` | Ukrainian | `th` | Thai |
+| `vi` | Vietnamese | `id` | Indonesian |
+| `ta` | Tamil | `te` | Telugu |
+| `chinese_cht` | Traditional Chinese | | |
 
-Best for: International documents, Arabic, Hindi, European languages
+### Mixed Language Documents
+- **Chinese + English**: Use `lang=ch` (PP-OCRv5 or PP-OCRv3)
+- **Japanese + English**: Use `lang=japan` (PP-OCRv5 or PP-OCRv3)
+- **Korean + English**: Use `lang=korean` (PP-OCRv5 or PP-OCRv3)
+- **Arabic + English**: Use `lang=ar` (PP-OCRv3)
+- **Other combinations**: Use primary language code
 
-### Mixed-Language Guidance
-- **Chinese + English**: Use `lang=ch`
-- **Japanese + English**: Use `lang=japan`
-- **Korean + English**: Use `lang=korean`
-- **Arabic + English**: Use `lang=ar`
-- **Unknown language**: Use `lang=en` and check confidence scores
+## Configuration
 
-## 📦 What's Included
+### Environment Variables
 
-### Complete Offline Operation
-✅ **API Documentation**: Swagger UI and ReDoc work without internet  
-✅ **Model Files**: All 26 models pre-cached in image  
-✅ **Dependencies**: Everything bundled in 6.5GB image  
-✅ **Zero External Calls**: No CDN or model repository access needed at runtime
+Configure via `docker-compose.yml`:
 
-### Environment Setup
-✅ **CUDA 12.4**: Stable base image `nvidia/cuda:12.4.0-base-ubuntu22.04`  
-✅ **LD_LIBRARY_PATH**: Properly configured for CUDA libraries  
-✅ **GPU Variables**: NVIDIA_VISIBLE_DEVICES, NVIDIA_DRIVER_CAPABILITIES  
-✅ **PaddlePaddle**: GPU-enabled with proper environment
-
-## 🔍 Troubleshooting
-
-### GPU Not Detected
-
-```bash
-# Check GPU in container
-docker exec paddleocr-paddleocr-api-1 nvidia-smi
-
-# Verify CUDA compilation
-docker exec paddleocr-paddleocr-api-1 python3 -c \
-  "import paddle; print(f'CUDA: {paddle.is_compiled_with_cuda()}')"
+```yaml
+environment:
+  - CUDA_VISIBLE_DEVICES=0           # GPU device ID
+  - PADDLE_DEVICE=gpu:0              # PaddlePaddle device
+  - PADDLEOCR_HOME=/root/.paddleocr  # Model cache directory
+  - PADDLEX_HOME=/root/.paddlex      # PaddleX cache directory
 ```
 
-**Solutions**:
-- Install NVIDIA Container Toolkit
-- Verify `nvidia-smi` works on host
-- Check docker-compose.yml GPU configuration
+### Pipeline Feature Flags
 
-### Build Failures
+All endpoints support advanced preprocessing options:
 
-**"Model not found" or low success rate**:
-1. Check internet connection
-2. Verify access to paddlepaddle.org.cn
-3. Retry build (network may be unstable)
-4. Check disk space (~20GB needed)
+- `use_doc_preprocessor`: Enable document preprocessing (default: `false`)
+- `use_doc_orientation_classify`: Auto-detect page orientation (default: `true`)
+- `use_doc_unwarping`: Perspective/unwarping correction (default: `false`)
+- `use_textline_orientation`: Correct rotated text lines (default: `false`)
 
-**"libgthread-2.0-0 not found"**: Already fixed in Dockerfile
-
-**"--break-system-packages not supported"**: Already fixed in Dockerfile
-
-### ChatOCRv4 Empty Results
-
-The `chat_res` will be empty if Ollama service isn't accessible.
-
-**Setup Ollama**:
+**Example**:
 ```bash
-# On Ollama server
-ollama pull llama3:latest
-ollama pull llava:latest
-ollama list  # Verify models installed
+curl -X POST http://localhost:8001/ocr/ppocrv5 \
+  -F "file=@document.jpg" \
+  -F "lang=en" \
+  -F "use_doc_orientation_classify=true" \
+  -F "use_doc_unwarping=true"
 ```
 
-**Test connection**:
-```bash
-curl http://192.168.1.133:11434/api/tags
-  ```
+## Performance
 
-### API Errors
+### Model Sizes
+- PP-OCRv5: ~50MB per language (5 languages = 250MB)
+- PP-OCRv3: ~30MB per language (21 languages = 630MB)
+- PP-StructureV3: ~100MB (language-agnostic)
+- PP-ChatOCRv4: ~80MB (language-agnostic)
+- **Total**: ~1GB for complete model coverage
 
-```bash
-# Check logs
-docker-compose logs -f
+### Response Times
+- **First request**: 1-2 seconds per page (models cached)
+- **Subsequent requests**: 1-2 seconds per page
+- **GPU utilization**: 18-21% during inference
 
-# Common issues:
-# - Invalid language code → Use supported codes from /languages
-# - File format → Use JPG, PNG, or PDF only
-# - Missing Ollama → Install for ChatOCRv4 endpoint
+### Accuracy Improvements
+- PP-OCRv5: 13% improvement over PP-OCRv4
+- PP-OCRv3: Optimized for 21 languages
+- PP-StructureV3: Outperforms commercial solutions
+- PP-ChatOCRv4: 15% improvement with ERNIE 4.5
+
+## Docker Compose Configuration
+
+The provided `docker-compose.yml` includes:
+- **Port Mapping**: `8001:8000` (host:container)
+- **GPU Support**: NVIDIA runtime with GPU reservation
+- **Volume Mount**: Mount `ocr_api.py` for development
+- **Health Check**: Automatic service health monitoring
+- **Auto-restart**: Service restarts unless manually stopped
+
+### Custom Port
+
+To use a different port, edit `docker-compose.yml`:
+```yaml
+ports:
+  - "8080:8000"  # Use port 8080 instead
 ```
 
-## 📁 Project Structure
+## Development
+
+### Local Development (without Docker)
+
+1. Install dependencies:
+```bash
+pip install -r requirements.txt
+pip install paddlepaddle-gpu
+pip install uvicorn
+```
+
+2. Pre-download models:
+```bash
+python download_models.py
+```
+
+3. Run the API:
+```bash
+uvicorn ocr_api:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Testing
+
+Access the interactive API documentation at `http://localhost:8001/docs` to test all endpoints with a user-friendly interface.
+
+## Troubleshooting
+
+### GPU Not Available
+If you see "GPU requested but CUDA not available":
+1. Verify NVIDIA drivers: `nvidia-smi`
+2. Check Docker GPU support: `docker run --rm --gpus all nvidia/cuda:12.4.0-base-ubuntu22.04 nvidia-smi`
+3. Ensure NVIDIA Container Toolkit is installed
+
+### Model Download Failures
+Models are pre-downloaded during Docker build. If you encounter issues:
+1. Increase build timeout: `docker build --timeout 3600 -t paddleocr-api:latest .`
+2. Check internet connectivity during build
+3. Review build logs for specific errors
+
+### Ollama Integration (ChatOCRv4)
+To use PP-ChatOCRv4:
+1. Install Ollama: https://ollama.ai
+2. Pull required models:
+   ```bash
+   ollama pull llava:latest
+   ollama pull llama3:latest
+   ```
+3. Ensure Ollama is accessible from Docker container
+
+### Memory Issues
+If you encounter out-of-memory errors:
+1. Reduce concurrent requests
+2. Process smaller images/documents
+3. Increase GPU memory allocation
+4. Use CPU mode: Set `PADDLE_DEVICE=cpu` in `docker-compose.yml`
+
+## Project Structure
 
 ```
 paddleocr/
-├── ocr_api.py              # FastAPI application with 6 endpoints
-├── requirements.txt        # Python dependencies (fastapi-offline, paddleocr, etc.)
-├── download_models.py      # Model download script with retry logic
-├── Dockerfile             # CUDA 12.4 base with model caching
-├── docker-compose.yml     # Service config with GPU and env vars
-├── .dockerignore          # Build context filters
-└── README.md              # This file
+├── ocr_api.py           # FastAPI application
+├── download_models.py   # Model download script
+├── requirements.txt     # Python dependencies
+├── Dockerfile          # Docker image definition
+├── docker-compose.yml  # Docker Compose configuration
+└── README.md          # This file
 ```
 
-## 🎯 Build Configuration Explained
+## Dependencies
 
-### 1. Base Image: CUDA 12.4
-```dockerfile
-FROM nvidia/cuda:12.4.0-base-ubuntu22.04
-```
-- Stable CUDA 12.4 support
-- Ubuntu 22.04 LTS reliability
-- Compatible with PaddlePaddle GPU
+- **FastAPI**: Modern web framework for APIs
+- **PaddleOCR**: Open-source OCR toolkit
+- **PaddleX**: Extended PaddlePaddle models
+- **PaddlePaddle GPU**: Deep learning framework with CUDA support
+- **Pillow**: Image processing library
+- **NumPy**: Numerical computing library
+- **Uvicorn**: ASGI server
 
-### 2. Environment Variables
-```dockerfile
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
-ENV PATH=/usr/local/cuda/bin:${PATH}
-ENV NVIDIA_VISIBLE_DEVICES=all
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
-ENV HOME=/root
-ENV PADDLEOCR_HOME=/root/.paddleocr
-ENV PADDLEX_HOME=/root/.paddlex
-```
+## License
 
-**Why these matter**:
-- `LD_LIBRARY_PATH`: Finds CUDA shared libraries
-- `PATH`: Access to CUDA binaries
-- `NVIDIA_*`: GPU visibility and capabilities
-- `PADDLE*_HOME`: Model cache directories
+This project uses Apache 2.0 License. See PaddleOCR project for details: https://github.com/PaddlePaddle/PaddleOCR
 
-### 3. Model Caching Strategy
+## References
 
-Models are downloaded during build and cached in `/root/.paddlex/official_models/`:
+- **PaddleOCR**: https://github.com/PaddlePaddle/PaddleOCR
+- **PaddleX**: https://github.com/PaddlePaddle/PaddleX
+- **FastAPI**: https://fastapi.tiangolo.com
+- **Ollama**: https://ollama.ai
 
-```dockerfile
-RUN mkdir -p /root/.paddleocr /root/.paddlex && \
-    python3 download_models.py && \
-    echo "Total files: $(find /root/.paddlex -type f | wc -l)"
-```
+## Support
 
-**Results**:
-- 38+ model files cached
-- 26/28 models validated (92.9%)
-- GPU errors expected (no GPU during build)
-- Models work perfectly at runtime
-
-### 4. FastAPI Offline
-
-Uses `fastapi-offline` instead of `fastapi`:
-
-```python
-from fastapi_offline import FastAPIOffline
-
-app = FastAPIOffline(
-    title="PaddleOCR API - Multi-Language Document Intelligence (Offline)"
-)
-```
-
-**Benefits**:
-- Swagger UI works offline
-- ReDoc works offline
-- No CDN dependencies
-- ~726KB static assets included
-
-## 🔐 Offline & Air-Gap Deployment
-
-### Complete Offline Operation
-
-The container works in **completely disconnected environments**:
-
-✅ No internet needed at runtime  
-✅ All models pre-cached  
-✅ API docs served locally  
-✅ No external dependencies
-
-### Test Offline Mode
-
-```bash
-# Run container without network
-docker run -d \
-  --name paddleocr-offline \
-  --network none \
-  --gpus all \
-  -p 8001:8000 \
-  -v $(pwd)/ocr_api.py:/app/ocr_api.py:ro \
-  paddleocr-api:latest
-
-# Test if it works
-curl -X POST http://localhost:8001/ocr/ppocrv5 \
-  -F "file=@test.jpg" \
-  -F "lang=en"
-```
-
-If successful, the image is truly offline-capable! 🎉
-
-## 📈 Performance
-
-### Response Times (with RTX 5070 Ti, 16GB VRAM)
-- **First request**: 1-2 seconds (models cached)
-- **Subsequent requests**: 1-2 seconds
-- **GPU utilization**: 18-21% during inference
-- **Memory usage**: ~2-4GB
-
-### Model Coverage
-- **PP-OCRv5**: 5/5 languages (100%)
-- **PP-OCRv3**: 21/21 languages (100%)
-- **PP-StructureV3**: Cached (language-agnostic)
-- **PP-ChatOCRv4**: Cached (language-agnostic)
-- **Total**: 26/28 components (92.9%)
-
-## 💡 Best Practices
-
-### Language Selection
-1. **Know your document language**: Check language codes at `/languages`
-2. **Mixed documents**: Use primary language (e.g., `ch` for Chinese+English)
-3. **Unknown language**: Start with `en`, check confidence scores
-4. **PP-OCRv5 vs PP-OCRv3**: v5 for mixed CJK+English, v3 for international
-
-### Performance Optimization
-1. **Use appropriate endpoint**: PP-OCRv5 for CJK, PP-OCRv3 for others
-2. **Batch processing**: Send multiple requests concurrently
-3. **Monitor GPU**: Keep utilization under 80%
-4. **Image quality**: 300+ DPI for best accuracy
-
-### Production Deployment
-1. **Build once, deploy many**: Push image to registry
-2. **Version control**: Tag images (e.g., `paddleocr-api:v1.0.0`)
-3. **Health monitoring**: Use `/docs` endpoint for health checks
-4. **Scaling**: Deploy multiple containers behind load balancer
-5. **Resource limits**: Allocate 4GB RAM, 2GB VRAM minimum
-
-## 🐳 Docker Hub
-
-The image is available on Docker Hub:
-
-```bash
-# Pull from Docker Hub
-docker pull avinashmall84/paddleocr-api:latest
-
-# Run directly
-docker run -d --gpus all -p 8000:8000 \
-  -v $(pwd)/ocr_api.py:/app/ocr_api.py:ro \
-  avinashmall84/paddleocr-api:latest
-
-# Push updates (after rebuilding)
-docker push avinashmall84/paddleocr-api:latest
-```
-
-## 🛠️ Development
-
-### Local Development
-
-```bash
-# Edit ocr_api.py locally
-# Changes reflect immediately (volume mount)
-
-# Restart to apply changes
-docker-compose restart
-
-# View logs
-docker-compose logs -f
-```
-
-### Rebuilding
-
-```bash
-# Full rebuild
-docker-compose down
-docker buildx build --no-cache -t paddleocr-api:latest .
-docker-compose up -d
-```
-
-### Accessing Container
-
-```bash
-# Shell access
-docker exec -it paddleocr-paddleocr-api-1 bash
-
-# Check models
-find /root/.paddlex -type f | wc -l
-
-# Test PaddleOCR directly
-python3 -c "from paddleocr import PaddleOCR; print(PaddleOCR(lang='en'))"
-```
-
-## 📚 Documentation
-
-- **Interactive Docs**: http://localhost:8000/docs (Swagger UI - offline)
-- **ReDoc**: http://localhost:8000/redoc (offline)
-- **Language Reference**: http://localhost:8000/languages
-- **PaddleOCR GitHub**: https://github.com/PaddlePaddle/PaddleOCR
-
-## 🔄 Changelog
-
-### v3.2.0 (Current)
-- ✅ Changed base image to `nvidia/cuda:12.4.0-base-ubuntu22.04`
-- ✅ Added all required CUDA environment variables (LD_LIBRARY_PATH, etc.)
-- ✅ **Fixed PaddlePaddle version: 2.6.2 → 3.2.0** (resolves set_optimization_level() error)
-- ✅ Pre-downloaded and cached ALL 28 models (100% success rate)
-- ✅ Migrated to `fastapi-offline` for fully offline API documentation
-- ✅ Fixed `.dockerignore` to allow `requirements.txt`
-- ✅ Improved model download with 5 retries and recursive cache detection
-- ✅ Removed obsolete `libgthread-2.0-0` package
-- ✅ Built with Docker Buildx for better caching
-- ✅ Dual tags: `paddleocr-api:latest` + `avinashmall84/paddleocr-api:latest`
-- ✅ Image size: 15.9GB (includes full PaddlePaddle 3.2.0 with CUDA libraries)
-
-## 📝 License
-
-Apache 2.0 - See PaddleOCR project for details
-
-## 🙏 Acknowledgments
-
-Built with:
-- [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) - OCR framework
-- [PaddlePaddle](https://www.paddlepaddle.org.cn/) - Deep learning platform
-- [FastAPI](https://fastapi.tiangolo.com/) - Web framework
-- [fastapi-offline](https://pypi.org/project/fastapi-offline/) - Offline API docs
-- [Ollama](https://ollama.ai/) - LLM integration
+For issues, questions, or contributions:
+- PaddleOCR Issues: https://github.com/PaddlePaddle/PaddleOCR/issues
+- API Documentation: http://localhost:8001/docs (when running)
 
 ---
 
-**🎉 Production-Ready**: All requirements met, models cached, GPU enabled, fully offline-capable!
+**Version**: 3.2.0  
+**Last Updated**: October 2025
+

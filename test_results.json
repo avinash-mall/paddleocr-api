@@ -1,0 +1,2898 @@
+{
+  "ppocrv5": [
+    {
+      "description": "PP-OCRv5 lang=en flags={}",
+      "status_code": 200,
+      "elapsed_time": "17.25s",
+      "success": true,
+      "params": {
+        "lang": "en"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=en flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.18s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=en flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.14s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv5 lang=en flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.11s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=en flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.13s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv5 lang=ch flags={}",
+      "status_code": 200,
+      "elapsed_time": "8.53s",
+      "success": true,
+      "params": {
+        "lang": "ch"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=ch flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.56s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=ch flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.66s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv5 lang=ch flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.73s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=ch flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.77s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv5 lang=japan flags={}",
+      "status_code": 200,
+      "elapsed_time": "3.66s",
+      "success": true,
+      "params": {
+        "lang": "japan"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=japan flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.45s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=japan flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.71s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=japan flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.77s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=japan flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.76s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=korean flags={}",
+      "status_code": 200,
+      "elapsed_time": "4.23s",
+      "success": true,
+      "params": {
+        "lang": "korean"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=korean flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.34s",
+      "success": true,
+      "params": {
+        "lang": "korean",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=korean flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.62s",
+      "success": true,
+      "params": {
+        "lang": "korean",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=korean flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.85s",
+      "success": true,
+      "params": {
+        "lang": "korean",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=korean flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.63s",
+      "success": true,
+      "params": {
+        "lang": "korean",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=chinese_cht flags={}",
+      "status_code": 200,
+      "elapsed_time": "3.75s",
+      "success": true,
+      "params": {
+        "lang": "chinese_cht"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=chinese_cht flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.83s",
+      "success": true,
+      "params": {
+        "lang": "chinese_cht",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=chinese_cht flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.52s",
+      "success": true,
+      "params": {
+        "lang": "chinese_cht",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=chinese_cht flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "3.71s",
+      "success": true,
+      "params": {
+        "lang": "chinese_cht",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv5 lang=chinese_cht flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "4.00s",
+      "success": true,
+      "params": {
+        "lang": "chinese_cht",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    }
+  ],
+  "ppocrv3": [
+    {
+      "description": "PP-OCRv3 lang=en default_flags",
+      "status_code": 200,
+      "elapsed_time": "4.89s",
+      "success": true,
+      "params": {
+        "lang": "en"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=ch default_flags",
+      "status_code": 200,
+      "elapsed_time": "3.80s",
+      "success": true,
+      "params": {
+        "lang": "ch"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=fr default_flags",
+      "status_code": 200,
+      "elapsed_time": "3.47s",
+      "success": true,
+      "params": {
+        "lang": "fr"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=de default_flags",
+      "status_code": 200,
+      "elapsed_time": "1.78s",
+      "success": true,
+      "params": {
+        "lang": "de"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=es default_flags",
+      "status_code": 200,
+      "elapsed_time": "1.91s",
+      "success": true,
+      "params": {
+        "lang": "es"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=it default_flags",
+      "status_code": 200,
+      "elapsed_time": "1.83s",
+      "success": true,
+      "params": {
+        "lang": "it"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=ru default_flags",
+      "status_code": 200,
+      "elapsed_time": "3.79s",
+      "success": true,
+      "params": {
+        "lang": "ru"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=ar default_flags",
+      "status_code": 200,
+      "elapsed_time": "3.67s",
+      "success": true,
+      "params": {
+        "lang": "ar"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=hi default_flags",
+      "status_code": 200,
+      "elapsed_time": "3.52s",
+      "success": true,
+      "params": {
+        "lang": "hi"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=japan default_flags",
+      "status_code": 200,
+      "elapsed_time": "3.72s",
+      "success": true,
+      "params": {
+        "lang": "japan"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=korean default_flags",
+      "status_code": 200,
+      "elapsed_time": "3.89s",
+      "success": true,
+      "params": {
+        "lang": "korean"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=chinese_cht default_flags",
+      "status_code": 200,
+      "elapsed_time": "4.21s",
+      "success": true,
+      "params": {
+        "lang": "chinese_cht"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=pt default_flags",
+      "status_code": 200,
+      "elapsed_time": "2.03s",
+      "success": true,
+      "params": {
+        "lang": "pt"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=nl default_flags",
+      "status_code": 200,
+      "elapsed_time": "1.94s",
+      "success": true,
+      "params": {
+        "lang": "nl"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=pl default_flags",
+      "status_code": 200,
+      "elapsed_time": "2.08s",
+      "success": true,
+      "params": {
+        "lang": "pl"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=uk default_flags",
+      "status_code": 200,
+      "elapsed_time": "1.92s",
+      "success": true,
+      "params": {
+        "lang": "uk"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=th default_flags",
+      "status_code": 500,
+      "elapsed_time": "0.01s",
+      "success": false,
+      "params": {
+        "lang": "th"
+      },
+      "error": "{\"detail\":\"OCR inference failed: No models are available for the language 'th' and OCR version 'PP-OCRv3'.\"}"
+    },
+    {
+      "description": "PP-OCRv3 lang=vi default_flags",
+      "status_code": 200,
+      "elapsed_time": "1.94s",
+      "success": true,
+      "params": {
+        "lang": "vi"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=id default_flags",
+      "status_code": 200,
+      "elapsed_time": "2.10s",
+      "success": true,
+      "params": {
+        "lang": "id"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=ta default_flags",
+      "status_code": 200,
+      "elapsed_time": "3.76s",
+      "success": true,
+      "params": {
+        "lang": "ta"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=te default_flags",
+      "status_code": 200,
+      "elapsed_time": "3.39s",
+      "success": true,
+      "params": {
+        "lang": "te"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=en flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.09s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=en flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.92s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv3 lang=en flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.82s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=en flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.81s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv3 lang=ch flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.30s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=ch flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.32s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv3 lang=ch flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.35s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=ch flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "2.09s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv3 lang=ar flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.79s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=ar flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.82s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv3 lang=ar flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.86s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=ar flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.81s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv3 lang=hi flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.88s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=hi flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.89s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv3 lang=hi flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.81s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=hi flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.91s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv3 lang=fr flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.84s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=fr flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.80s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    },
+    {
+      "description": "PP-OCRv3 lang=fr flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.99s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 1,
+      "total_texts": 1
+    },
+    {
+      "description": "PP-OCRv3 lang=fr flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "1.96s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "results",
+        "total_texts",
+        "pipeline_flags",
+        "supported_languages"
+      ],
+      "results_count": 0,
+      "total_texts": 0
+    }
+  ],
+  "structurev3_markdown": [
+    {
+      "description": "StructureV3-MD lang=en flags={}",
+      "status_code": 0,
+      "success": false,
+      "error": "HTTPConnectionPool(host='localhost', port=8001): Read timed out. (read timeout=60)"
+    },
+    {
+      "description": "StructureV3-MD lang=en flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "35.77s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=en flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.94s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=en flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "24.10s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=en flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.66s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ch flags={}",
+      "status_code": 200,
+      "elapsed_time": "24.88s",
+      "success": true,
+      "params": {
+        "lang": "ch"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ch flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.80s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ch flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.83s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ch flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.92s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ch flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.56s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ar flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.19s",
+      "success": true,
+      "params": {
+        "lang": "ar"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ar flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.87s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ar flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.30s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ar flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.81s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=ar flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.66s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=hi flags={}",
+      "status_code": 200,
+      "elapsed_time": "25.85s",
+      "success": true,
+      "params": {
+        "lang": "hi"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=hi flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.57s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=hi flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.95s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=hi flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.63s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=hi flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.14s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=fr flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.45s",
+      "success": true,
+      "params": {
+        "lang": "fr"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=fr flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.17s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=fr flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.35s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=fr flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.34s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=fr flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.45s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=de flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.20s",
+      "success": true,
+      "params": {
+        "lang": "de"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=de flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.51s",
+      "success": true,
+      "params": {
+        "lang": "de",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=de flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.57s",
+      "success": true,
+      "params": {
+        "lang": "de",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=de flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.70s",
+      "success": true,
+      "params": {
+        "lang": "de",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=de flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.19s",
+      "success": true,
+      "params": {
+        "lang": "de",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=es flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.70s",
+      "success": true,
+      "params": {
+        "lang": "es"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=es flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.03s",
+      "success": true,
+      "params": {
+        "lang": "es",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=es flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.31s",
+      "success": true,
+      "params": {
+        "lang": "es",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=es flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.20s",
+      "success": true,
+      "params": {
+        "lang": "es",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=es flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.21s",
+      "success": true,
+      "params": {
+        "lang": "es",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=japan flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.54s",
+      "success": true,
+      "params": {
+        "lang": "japan"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=japan flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.46s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=japan flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.83s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=japan flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.56s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-MD lang=japan flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.99s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "markdown",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    }
+  ],
+  "structurev3_json": [
+    {
+      "description": "StructureV3-JSON lang=en flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.54s",
+      "success": true,
+      "params": {
+        "lang": "en"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=en flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.47s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=en flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.44s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=en flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.44s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=en flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.36s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ch flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.25s",
+      "success": true,
+      "params": {
+        "lang": "ch"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ch flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.42s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ch flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.03s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ch flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.79s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ch flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.12s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ar flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.47s",
+      "success": true,
+      "params": {
+        "lang": "ar"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ar flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.35s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ar flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.43s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ar flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.21s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=ar flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.38s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=hi flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.46s",
+      "success": true,
+      "params": {
+        "lang": "hi"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=hi flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.51s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=hi flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.25s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=hi flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.56s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=hi flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.30s",
+      "success": true,
+      "params": {
+        "lang": "hi",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=fr flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.51s",
+      "success": true,
+      "params": {
+        "lang": "fr"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=fr flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.49s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=fr flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.97s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=fr flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.16s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=fr flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.85s",
+      "success": true,
+      "params": {
+        "lang": "fr",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=de flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.07s",
+      "success": true,
+      "params": {
+        "lang": "de"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=de flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.73s",
+      "success": true,
+      "params": {
+        "lang": "de",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=de flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "27.17s",
+      "success": true,
+      "params": {
+        "lang": "de",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=de flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "27.27s",
+      "success": true,
+      "params": {
+        "lang": "de",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=de flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.12s",
+      "success": true,
+      "params": {
+        "lang": "de",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=es flags={}",
+      "status_code": 200,
+      "elapsed_time": "26.49s",
+      "success": true,
+      "params": {
+        "lang": "es"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=es flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.86s",
+      "success": true,
+      "params": {
+        "lang": "es",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=es flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.82s",
+      "success": true,
+      "params": {
+        "lang": "es",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=es flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.86s",
+      "success": true,
+      "params": {
+        "lang": "es",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=es flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.56s",
+      "success": true,
+      "params": {
+        "lang": "es",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=japan flags={}",
+      "status_code": 200,
+      "elapsed_time": "25.92s",
+      "success": true,
+      "params": {
+        "lang": "japan"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=japan flags={'use_doc_orientation_classify': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.32s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_doc_orientation_classify": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=japan flags={'use_doc_unwarping': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.86s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_doc_unwarping": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=japan flags={'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "26.63s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "StructureV3-JSON lang=japan flags={'use_doc_orientation_classify': 'true', 'use_doc_unwarping': 'true', 'use_textline_orientation': 'true'}",
+      "status_code": 200,
+      "elapsed_time": "25.76s",
+      "success": true,
+      "params": {
+        "lang": "japan",
+        "use_doc_orientation_classify": "true",
+        "use_doc_unwarping": "true",
+        "use_textline_orientation": "true"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "pages",
+        "total_pages",
+        "pipeline_flags"
+      ]
+    }
+  ],
+  "chatocrv4": [
+    {
+      "description": "ChatOCRv4 lang=en keys=Name,Date,Total",
+      "status_code": 200,
+      "elapsed_time": "40.36s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "keys": "Name,Date,Total",
+        "llm_model": "llama3:latest",
+        "mllm_model": "llava:latest"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "extracted_data",
+        "requested_keys",
+        "models",
+        "success",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "ChatOCRv4 lang=en keys=Invoice Number,Amount",
+      "status_code": 200,
+      "elapsed_time": "9.22s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "keys": "Invoice Number,Amount",
+        "llm_model": "llama3:latest",
+        "mllm_model": "llava:latest"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "extracted_data",
+        "requested_keys",
+        "models",
+        "success",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "ChatOCRv4 lang=en keys=Landlord,Tenant,Rent",
+      "status_code": 200,
+      "elapsed_time": "9.61s",
+      "success": true,
+      "params": {
+        "lang": "en",
+        "keys": "Landlord,Tenant,Rent",
+        "llm_model": "llama3:latest",
+        "mllm_model": "llava:latest"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "extracted_data",
+        "requested_keys",
+        "models",
+        "success",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "ChatOCRv4 lang=ch keys=Name,Date,Total",
+      "status_code": 200,
+      "elapsed_time": "9.60s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "keys": "Name,Date,Total",
+        "llm_model": "llama3:latest",
+        "mllm_model": "llava:latest"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "extracted_data",
+        "requested_keys",
+        "models",
+        "success",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "ChatOCRv4 lang=ch keys=Invoice Number,Amount",
+      "status_code": 200,
+      "elapsed_time": "9.80s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "keys": "Invoice Number,Amount",
+        "llm_model": "llama3:latest",
+        "mllm_model": "llava:latest"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "extracted_data",
+        "requested_keys",
+        "models",
+        "success",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "ChatOCRv4 lang=ch keys=Landlord,Tenant,Rent",
+      "status_code": 200,
+      "elapsed_time": "9.74s",
+      "success": true,
+      "params": {
+        "lang": "ch",
+        "keys": "Landlord,Tenant,Rent",
+        "llm_model": "llama3:latest",
+        "mllm_model": "llava:latest"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "extracted_data",
+        "requested_keys",
+        "models",
+        "success",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "ChatOCRv4 lang=ar keys=Name,Date,Total",
+      "status_code": 200,
+      "elapsed_time": "9.86s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "keys": "Name,Date,Total",
+        "llm_model": "llama3:latest",
+        "mllm_model": "llava:latest"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "extracted_data",
+        "requested_keys",
+        "models",
+        "success",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "ChatOCRv4 lang=ar keys=Invoice Number,Amount",
+      "status_code": 200,
+      "elapsed_time": "10.41s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "keys": "Invoice Number,Amount",
+        "llm_model": "llama3:latest",
+        "mllm_model": "llava:latest"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "extracted_data",
+        "requested_keys",
+        "models",
+        "success",
+        "pipeline_flags"
+      ]
+    },
+    {
+      "description": "ChatOCRv4 lang=ar keys=Landlord,Tenant,Rent",
+      "status_code": 200,
+      "elapsed_time": "10.42s",
+      "success": true,
+      "params": {
+        "lang": "ar",
+        "keys": "Landlord,Tenant,Rent",
+        "llm_model": "llama3:latest",
+        "mllm_model": "llava:latest"
+      },
+      "response_keys": [
+        "pipeline",
+        "description",
+        "extracted_data",
+        "requested_keys",
+        "models",
+        "success",
+        "pipeline_flags"
+      ]
+    }
+  ],
+  "languages": {
+    "status_code": 200,
+    "success": true,
+    "total_languages": 21,
+    "endpoints": [
+      "ppocrv5",
+      "ppocrv3",
+      "structurev3_markdown",
+      "structurev3_json",
+      "chatocrv4"
+    ]
+  }
+}
